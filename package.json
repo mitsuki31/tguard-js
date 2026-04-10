@@ -1,0 +1,33 @@
+{
+  "name": "typeguard",
+  "description": "Runtime type safety for JavaScript.",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "files": ["dist/"],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc --build",
+    "postbuild": "bun scripts/postbuild.mjs"
+  },
+  "devDependencies": {
+    "@tsconfig/node14": "^14.1.8",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.5.2",
+    "rimraf": "^6.1.3",
+    "strip-comments": "^2.0.1",
+    "typescript": "^6.0.2"
+  },
+  "license": "MIT",
+  "author": "Ryuu Mitsuki (https://github.com/mitsuki31)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitsuki31/typeguard-js.git"
+  },
+  "homepage": "https://github.com/mitsuki31/typeguard-js#readme",
+  "keywords": [
+    "javascript",
+    "typeguard",
+    "runtime",
+    "library"
+  ]
+}
