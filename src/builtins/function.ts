@@ -7,6 +7,8 @@
  * @since    1.0.0
  */
 
+import { toStringFunc } from '../internal/utils';
+
 /**
  * Determines whether the provided value is a function.
  *
@@ -44,7 +46,7 @@ export function isFunction(x: unknown): x is (...args: any[]) => unknown {
  * @see {@link isCallable}
  */
 export function isClass(x: unknown): x is new (...args: any[]) => unknown {
-  return isFunction(x) && /^class\s/.test(Function.prototype.toString.call(x));
+  return isFunction(x) && /^class\s/.test(toStringFunc.call(x));
 }
 
 /**

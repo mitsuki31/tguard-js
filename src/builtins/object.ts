@@ -7,6 +7,8 @@
  * @since    1.0.0
  */
 
+import { getProto } from '../internal/utils';
+
 /**
  * Determines whether the provided value is an object (excluding `null`).
  *
@@ -76,7 +78,7 @@ export function isObject(x: unknown): x is object {
  */
 export function isPlainObject(x: unknown): x is Record<PropertyKey, unknown> {
   if (!isObject(x)) return false;
-  let proto = Object.getPrototypeOf(x);
+  let proto = getProto(x);
   return proto === Object.prototype || proto === null;
 }
 
