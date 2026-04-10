@@ -144,6 +144,18 @@ export function isBool(x: unknown): x is boolean {
   return isBoolean(x);
 }
 
+/**
+ * Determines whether the provided value is a `symbol`.
+ *
+ * @param x - The value to be checked.
+ * @returns `true` if the value is a `symbol`, otherwise `false`.
+ *
+ * @since 1.0.0
+ */
+export function isSymbol(x: unknown): x is symbol {
+  return typeof x === 'symbol';
+}
+
 //#endregion
 //#region Nullish
 
