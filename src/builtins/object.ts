@@ -16,7 +16,7 @@ import { getProto } from '../internal/utils';
  * This function returns `true` for any value whose `typeof` result is `"object"`
  * except `null`. This includes arrays, dates, maps, sets, and class instances.
  *
- * This function does NOT check whether a value is a plain object (`{}`).
+ * This function does **NOT** check whether a value is a plain object (`{}`).
  * Use {@linkcode isPlainObject} for that purpose.
  *
  * | Value        | Result  |
@@ -30,14 +30,14 @@ import { getProto } from '../internal/utils';
  * | `() => {}`   | `false` |
  * | `'text'`     | `false` |
  *
- * @param x - The value to be checked.
+ * @param o - The value to be checked.
  * @returns `true` if the value is an object and not `null`.
  *
  * @since 1.0.0
  * @see   {@link isPlainObject}
  */
-export function isObject(x: unknown): x is object {
-  return x !== null && typeof x === 'object';
+export function isObject(o: unknown): o is object {
+  return o !== null && typeof o === 'object';
 }
 
 /**
@@ -56,54 +56,72 @@ export function isObject(x: unknown): x is object {
  * This function only narrows the top-level type and does not
  * validate nested properties.
  *
- * | Value                    | Result |
- * | ------------------------ | ------ |
- * | `{}`                     | `true` |
- * | `new Object()`           | `true` |
- * | `Object.create(null)`    | `true` |
- * | `[]`                     | `false`|
- * | `new Date()`             | `false`|
- * | `new Map()`              | `false`|
- * | `class A {}; new A()`    | `false`|
- * | `null`                   | `false`|
- * | `undefined`              | `false`|
- * | `() => ({})`             | `true` |
+ * | Value                    | Result  |
+ * | ------------------------ | ------- |
+ * | `{}`                     | `true`  |
+ * | `new Object()`           | `true`  |
+ * | `Object.create(null)`    | `true`  |
+ * | `[]`                     | `false` |
+ * | `new Date()`             | `false` |
+ * | `new Map()`              | `false` |
+ * | `class A {}; new A()`    | `false` |
+ * | `null`                   | `false` |
+ * | `undefined`              | `false` |
  *
- * @param x - The value to be checked.
+ * @param o - The value to be checked.
  *
  * @returns `true` if the value is a plain object, otherwise `false`.
  *
  * @since 1.0.0
  * @see   {@link isObject}
  */
-export function isPlainObject(x: unknown): x is Record<PropertyKey, unknown> {
-  if (!isObject(x)) return false;
-  let proto = getProto(x);
+export function isPlainObject(o: unknown): o is Record<PropertyKey, unknown> {
+  if (!isObject(o)) return false;
+  let proto = getProto(o);
   return proto === Object.prototype || proto === null;
 }
 
 /**
  * Alias for {@linkcode isPlainObject}.
  *
- * @param x - The value to be checked.
+ * @param o - The value to be checked.
  * @returns `true` if the value is a plain object, otherwise `false`.
  *
  * @since 1.0.0
  * @see   {@link isPlainObject}
  */
-export function isRecord(x: unknown): x is Record<PropertyKey, unknown> {
-  return isPlainObject(x);
+export function isRecord(o: unknown): o is Record<PropertyKey, unknown> {
+  return isPlainObject(o);
 }
 
 /**
  * Determines whether the provided value is an empty plain object.
  *
- * @param x - The value to be checked.
- * @returns `true` if the value is an empty plain object, otherwise `false`.
+ * @remarks
+ * A value is considered empty if it is a plain object with no own
+ * enumerable string-keyed properties.
+ *
+ * For checking an empty array, consider use
+ * {@linkcode builtins.array.isEmptyArray | isEmptyArray}.
+ *
+ * Non-enumerable and symbol properties are not considered.
+ *
+ * | Value                         | Result |
+ * | ----------------------------- | ------ |
+ * | `{}`                          | `true` |
+ * | `{ a: 1 }`                    | `false`|
+ * | `Object.create(null)`         | `true` |
+ * | `[]`                          | `false`|
+ * | `new Date()`                  | `false`|
+ * | `{ [Symbol('a')]: 1 }`        | `true` |
+ *
+ * @param o - The value to be checked.
+ * @returns `true` if the value is an empty plain object.
  *
  * @since 1.0.0
  * @see   {@link isPlainObject}
  */
-export function isEmptyObject(x: unknown): boolean {
-  return isPlainObject(x) && Object.keys(x).length === 0;
+export function isEmptyObject(o: unknown): boolean {
+  if (!isPlainObject(o)) return false;
+  return Object.keys(o).length === 0;
 }
