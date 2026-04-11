@@ -119,7 +119,8 @@ export function isNumber(x: unknown): x is number {
  * @see   {@link isNumber}
  */
 export function isFinite(x: unknown): x is number {
-  return isNumber(x) && Number.isFinite(x);
+  if (!isNumber(x)) return false;
+  return Number.isFinite(x);
 }
 
 /**
@@ -144,6 +145,7 @@ export function isFinite(x: unknown): x is number {
  * @see   {@link isFinite}
  */
 export function isInfinite(x: unknown): x is number {
+  if (!isNumber(x) || isNaN(x)) return false;
   return !isFinite(x);
 }
 
