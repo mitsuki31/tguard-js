@@ -67,16 +67,16 @@ export function isValidDate(x: unknown): x is Date {
  * This function checks:
  * 1. The value is a string
  * 2. The string matches a simplified ISO 8601 format (only if `strict` is set to `false`)
- *     - `YYYY-MM-DDT`
+ *     - `YYYY-MM-DDT` (acceptable if `strict` is set to `false`)
  *     - `YYYY-MM-DDTHH:mm:ss.sssZ`
  *     - `YYYY-MM-DDTHH:mm:ss.sss+HH:mm`
- * 3. The parsed date is valid
  *
- * | Value                          | Result `strict` Off | Result `strict` On |
+ * | Value                          | Result Default      | Result Strict Mode |
  * | ------------------------------ | ------------------- | ------------------ |
  * | `'2026-04-10T12:00:00Z'`       | `true`              | `true`             |
  * | `'2026-04-10T12:00:00+07:00'`  | `true`              | `true`             |
  * | `'2026-04-10T-foo'`            | `true`              | `false`            |
+ * | `'2026-04-10T'`                | `true`              | `false`            |
  * | `'2026-04-10'`                 | `false`             | `false`            |
  * | `'invalid-date'`               | `false`             | `false`            |
  * | `new Date().toISOString()`     | `true`              | `true`             |
@@ -100,7 +100,9 @@ export function isISODateString(x: unknown, strict?: boolean): x is string {
     if (!basicISORegex.test(x)) return false;
   }
 
-  return isValidDate(new Date(x));
+  // No validation here due to an issue if passing a simplified ISO 8601 date
+  // to `Date` constuctor, which returns an error invalid date
+  return true;
 }
 
 /**
