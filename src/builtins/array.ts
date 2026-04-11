@@ -256,3 +256,22 @@ export function isPlainObjectArray(
 ): x is Record<PropertyKey, unknown>[] {
   return isArrayOf<Record<PropertyKey, unknown>>(x, isPlainObject);
 }
+
+/**
+ * Determines whether the provided value is an empty array.
+ *
+ * | Value | Result |
+ * | ----- | ------ |
+ * | `[]`  | `true` |
+ * | `[1]` | `false`|
+ * | `[,]` | `false`|
+ * | `{}`  | `false`|
+ *
+ * @param x - The value to be checked.
+ * @returns `true` if the value is an empty array, otherwise `false`.
+ *
+ * @since 1.0.0
+ */
+export function isEmptyArray(x: unknown): x is [] {
+  return isArray(x) && x.length === 0;
+}
