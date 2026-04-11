@@ -129,6 +129,10 @@ export function isEmptyObject(o: unknown): boolean {
 /**
  * Determines whether the provided value is a sealed object.
  *
+ * **Important Note:**\
+ * Empty objects (`{}`) that are made non-extensible (via `Object.preventExtensions`)
+ * are also considered sealed, since there are no properties that violate the constraint.
+ *
  * @remarks
  * A sealed object is an object whose properties:
  * - cannot be added or removed
@@ -166,7 +170,8 @@ export function isEmptyObject(o: unknown): boolean {
  * @since 1.0.0
  */
 export function isSealed<T extends object>(o: T): o is T {
-  return isObject(o) && Object.isSealed(o);
+  if (!isObject(o)) return false;
+  return Object.isSealed(o);
 }
 
 /**
@@ -197,11 +202,20 @@ export function isSealed<T extends object>(o: T): o is T {
  * @since 1.0.0
  */
 export function isExtensible<T extends object>(o: unknown): o is T {
-  return isObject(o) && Object.isExtensible(o);
+  if (!isObject(o)) return false;
+  return Object.isExtensible(o);
 }
 
 /**
  * Determines whether the provided value is a frozen object.
+ *
+ * **Important Note:**\
+ * JavaScript considers an object "frozen" if it is non-extensible and all of its
+ * properties are non-configurable and non-writable.
+ *
+ * This leads to a subtle edge case:
+ * - An empty object (`{}`) that is sealed or made non-extensible is also
+ *   considered frozen, even if `Object.freeze` was never called.
  *
  * @remarks
  * A frozen object is an object whose properties:
@@ -216,7 +230,7 @@ export function isExtensible<T extends object>(o: unknown): o is T {
  * | Value                  | Result | `Object.isFrozen` |
  * | ---------------------- | ------ | ----------------- |
  * | `Object.freeze( {} )`  | `true` | `true`            |
- * | `Object.seal( {} )`    | `false`| `false`           |
+ * | `Object.seal( {} )`    | `true` | `true`            |
  * | `{}`                   | `false`| `false`           |
  * | `[]`                   | `false`| `false`           |
  * | `null`                 | `false`| `true`            |
@@ -231,5 +245,6 @@ export function isExtensible<T extends object>(o: unknown): o is T {
  * @since 1.0.0
  */
 export function isFrozen<T extends object>(o: unknown): o is Readonly<T> {
-  return isObject(o) && Object.isFrozen(o);
+  if (!isObject(o)) return false;
+  return Object.isFrozen(o);
 }
