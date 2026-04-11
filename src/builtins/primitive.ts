@@ -7,8 +7,6 @@
  * @since     1.0.0
  */
 
-//#region Primitives
-
 /**
  * Type alias for primitive types.
  *
@@ -52,6 +50,8 @@ export function isPrimitive(x: unknown): x is PrimitiveType {
   return x === null || (typeof x !== 'object' && typeof x !== 'function');
 }
 
+//#region String
+
 /**
  * Determines whether the provided value is a string.
  *
@@ -63,6 +63,9 @@ export function isPrimitive(x: unknown): x is PrimitiveType {
 export function isString(x: unknown): x is string {
   return typeof x === 'string';
 }
+
+//#endregion
+//#region Number
 
 /**
  * Determines whether the provided value is a `number` (not a type of `bigint`).
@@ -87,7 +90,7 @@ export function isString(x: unknown): x is string {
  *
  * @since 1.0.0
  * @see   {@link isBigInt}
- * @see   {@link isFiniteNumber}
+ * @see   {@link isFinite}
  */
 export function isNumber(x: unknown): x is number {
   return typeof x === 'number';
@@ -96,14 +99,52 @@ export function isNumber(x: unknown): x is number {
 /**
  * Determines whether the provided value is a finite number.
  *
+ * | Value        | Result  |
+ * | ------------ | ------- |
+ * | `1`          | `true`  |
+ * | `1.0`        | `true`  |
+ * | `0xFFF`      | `true`  |
+ * | `0b100`      | `true`  |
+ * | `1e5`        | `true`  |
+ * | `NaN`        | `false` |
+ * | `Infinity`   | `false` |
+ * | `-Infinity`  | `false` |
+ * | `BigInt(1)`  | `false` |
+ * | `1n`         | `false` |
+ *
  * @param x - The value to be checked.
  * @returns `true` if the value is a finite number, otherwise `false`.
  *
  * @since 1.0.0
  * @see   {@link isNumber}
  */
-export function isFiniteNumber(x: unknown): x is number {
-  return typeof x === 'number' && Number.isFinite(x);
+export function isFinite(x: unknown): x is number {
+  return isNumber(x) && Number.isFinite(x);
+}
+
+/**
+ * Determines whether the provided value is an infinite number.
+ *
+ * @remarks
+ * Infinite numbers can be created by `Infinity`, `-Infinity`, or `1 / 0`.
+ *
+ * | Value        | Result  |
+ * | ------------ | ------- |
+ * | `Infinity`   | `true`  |
+ * | `-Infinity`  | `true`  |
+ * | `1 / 0`      | `true`  |
+ * | `1`          | `false` |
+ * | `NaN`        | `false` |
+ * | `'Infinity'` | `false` |
+ *
+ * @param x - The value to be checked.
+ * @returns `true` if the value is an infinite number, otherwise `false`.
+ *
+ * @since 1.0.0
+ * @see   {@link isFinite}
+ */
+export function isInfinite(x: unknown): x is number {
+  return !isFinite(x);
 }
 
 /**
@@ -118,6 +159,21 @@ export function isFiniteNumber(x: unknown): x is number {
 export function isBigInt(x: unknown): x is bigint {
   return typeof x === 'bigint';
 }
+
+/**
+ * Determines whether the provided value is `NaN`.
+ *
+ * @param x - The value to be checked.
+ * @returns `true` if the value is `NaN`, otherwise `false`.
+ *
+ * @since 1.0.0
+ */
+export function isNaN(x: unknown): x is number {
+  return isNumber(x) && Number.isNaN(x);
+}
+
+//#endregion
+//#region Boolean
 
 /**
  * Determines whether the provided value is a `boolean` (`true` or `false`).
@@ -143,6 +199,9 @@ export function isBoolean(x: unknown): x is boolean {
 export function isBool(x: unknown): x is boolean {
   return isBoolean(x);
 }
+
+//#endregion
+//#region Symbol
 
 /**
  * Determines whether the provided value is a `symbol`.
@@ -269,8 +328,8 @@ export function isUndefined(x: unknown): x is undefined {
  * This is a type guard that narrows the type away from `null` and `undefined`.
  *
  * @remarks
- * This function is different from {@linkcode envs.env~isEnvDefined | isEnvDefined}.
- * {@linkcode envs.env~isEnvDefined | isEnvDefined} checks if an environment variable is
+ * This function is different from {@linkcode envs.env.isEnvDefined | isEnvDefined}.
+ * {@linkcode envs.env.isEnvDefined | isEnvDefined} checks if an environment variable is
  * defined and has a non-empty string value.
  *
  * @typeParam T - The type of the input value.
