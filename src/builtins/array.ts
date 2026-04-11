@@ -275,3 +275,18 @@ export function isPlainObjectArray(
 export function isEmptyArray(x: unknown): x is [] {
   return isArray(x) && x.length === 0;
 }
+
+/**
+ * Determines whether the provided value is a readonly array.
+ *
+ * @remarks
+ * This function checks if the value is an array and if it is frozen.
+ *
+ * @param x - The value to be checked.
+ * @returns `true` if the value is a readonly array, otherwise `false`.
+ *
+ * @since 1.0.0
+ */
+export function isReadonlyArray(x: unknown): x is readonly unknown[] {
+  return isArray(x) && Object.isFrozen(x);
+}
