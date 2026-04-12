@@ -1,0 +1,27 @@
+{
+  "include": ["src/**/*"],
+  "exclude": ["tests/**/*"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "composite": true,
+
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "es2015",
+    "module": "commonjs",
+    "types": ["node", "jest"],
+    "lib": ["ES2016"],
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "declaration": true,
+    "declarationMap": false,
+    "listEmittedFiles": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true
+  }
+}

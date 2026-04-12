@@ -1,0 +1,20 @@
+{
+  "include": ["tests/**/*", "src/**/*"],
+  "exclude": [],
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    "target": "es2020",
+    "module": "commonjs",
+    "types": ["node", "jest"],
+    "lib": ["ES2020", "ES2020.BigInt"],
+
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true
+  }
+}
