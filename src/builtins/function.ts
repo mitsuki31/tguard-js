@@ -25,25 +25,32 @@ export function isFunction(x: unknown): x is (...args: any[]) => unknown {
 /**
  * Determines whether the provided value is an ES6 class constructor.
  *
- * This function can only confirm that a value is a class constructor at runtime.
- * It cannot determine the instance type of the class, so it does not narrow to
- * a specific class instance type.
+ * **Note:**\
+ * Native constructors (`URL`, `Map`, etc.) are runtime-dependent and
+ * may yield different results across environments.
  *
- * | Symbol                 | Value   |
- * | ---------------------- | ------- |
- * | `class {}`             | `true`  |
- * | `class A extends B {}` | `true`  |
- * | `function () {}`       | `false` |
- * | `function () {}.bind()`| `false` |
- * | `() => {}`             | `false` |
- * | `{}`                   | `false` |
- * | `URL`                  | `true`  |
+ * This behavior is due to engine implementation differences and
+ * cannot be fully normalized without sacrificing correctness.
+ *
+ * @remarks
+ * This function uses `Function.prototype.toString()` to check if the
+ * value is a class constructor but it is **unstable** for native constructors.
+ *
+ * | Value                   | Result (Typical)  |
+ * | ----------------------- | ----------------- |
+ * | `class {}`              | `true`            |
+ * | `class A extends B {}`  | `true`            |
+ * | `function () {}`        | `false`           |
+ * | `function () {}.bind()` | `false`           |
+ * | `() => {}`              | `false`           |
+ * | `{}`                    | `false`           |
+ * | `URL`                   | runtime-dependent |
  *
  * @param x - The value to be checked.
  * @returns `true` if the value is an ES6 class constructor, otherwise `false`.
  *
  * @since 1.0.0
- * @see {@link isCallable}
+ * @see   {@link isCallable}
  */
 export function isClass(x: unknown): x is new (...args: any[]) => unknown {
   return isFunction(x) && /^class\s/.test(toStringFunc.call(x));
