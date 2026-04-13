@@ -5,9 +5,10 @@
   "type": "commonjs",
   "files": ["dist/"],
   "scripts": {
-    "prebuild": "rimraf dist",
+    "clean": "rimraf dist/",
     "build": "tsc --build",
-    "postbuild": "bun scripts/postbuild.mjs",
+    "build:force": "npm run clean && npm run build -- --force",
+    "postbuild": "npm run scripts/postbuild.mjs",
     "format": "prettier --write --cache --cache-location .prettiercache src/ tests/",
     "test": "jest --config jest.config.js",
     "coverage": "jest --config jest.config.js --coverage"
