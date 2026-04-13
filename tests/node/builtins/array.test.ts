@@ -11,8 +11,8 @@ import {
   isReadonlyArray,
   isStringArray,
   isSymbolArray,
-} from '../../src/builtins/array';
-import { isNumber, isString, isBoolean } from '../../src/builtins/primitive';
+} from '../../../src/builtins/array';
+import { isNumber, isString, isBoolean } from '../../../src/builtins/primitive';
 
 describe('builtins/array', () => {
   //#region isArray

@@ -1,4 +1,4 @@
-import { isEnvDefined } from '../../src/envs/env';
+import { isEnvDefined } from '../../../src/envs/env';
 
 describe('envs/env', () => {
   describe('isEnvDefined', () => {

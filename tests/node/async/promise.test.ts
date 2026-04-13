@@ -1,4 +1,4 @@
-import { isPromise, isPromiseLike } from '../../src/async/promise';
+import { isPromise, isPromiseLike } from '../../../src/async/promise';
 
 describe('async/promise', () => {
   //#region isPromiseLike

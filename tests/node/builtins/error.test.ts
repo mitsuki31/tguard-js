@@ -8,7 +8,7 @@ import {
   isSyntaxError,
   isTypeError,
   normalizeError,
-} from '../../src/builtins/error';
+} from '../../../src/builtins/error';
 
 describe('builtins/error', () => {
   //#region isError

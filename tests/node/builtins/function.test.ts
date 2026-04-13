@@ -1,4 +1,8 @@
-import { isFunction, isClass, isCallable } from '../../src/builtins/function';
+import {
+  isFunction,
+  isClass,
+  isCallable,
+} from '../../../src/builtins/function';
 
 describe('builtins/function', () => {
   //#region isFunction

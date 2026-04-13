@@ -15,7 +15,7 @@ import {
   isNullish,
   isNonNullish,
   isDefined,
-} from '../../src/builtins/primitive';
+} from '../../../src/builtins/primitive';
 
 describe('builtins/primitive', () => {
   //#region isPrimitive

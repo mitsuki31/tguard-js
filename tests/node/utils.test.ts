@@ -1,4 +1,4 @@
-import { getType, hasOwn, typeOf } from '../src/utils';
+import { getType, hasOwn, typeOf } from '../../src/utils';
 
 describe('typeguard/utils', () => {
   const types = [

@@ -1,4 +1,4 @@
-import { attachCause } from '../../src/internal/utils';
+import { attachCause } from '../../../src/internal/utils';
 
 describe('internal/utils', () => {
   //#region attachCause

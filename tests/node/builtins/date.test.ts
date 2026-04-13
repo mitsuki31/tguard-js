@@ -3,7 +3,7 @@ import {
   isDateString,
   isISODateString,
   isValidDate,
-} from '../../src/builtins/date';
+} from '../../../src/builtins/date';
 
 describe('builtins/date', () => {
   //#region isDate

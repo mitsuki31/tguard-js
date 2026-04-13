@@ -6,7 +6,7 @@ import {
   isSealed,
   isExtensible,
   isFrozen,
-} from '../../src/builtins/object';
+} from '../../../src/builtins/object';
 
 describe('builtins/object', () => {
   //#region isObject
