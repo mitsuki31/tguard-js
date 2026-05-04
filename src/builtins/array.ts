@@ -100,7 +100,7 @@ export function isArrayOf<T>(
  * @see   {@link isString}
  */
 export function isStringArray(x: unknown): x is string[] {
-  return isArrayOf<string>(x, isString);
+  return !isEmptyArray(x) && isArrayOf<string>(x, isString);
 }
 
 /**
@@ -121,7 +121,7 @@ export function isStringArray(x: unknown): x is string[] {
  * @see   {@link isNumber}
  */
 export function isNumberArray(x: unknown): x is number[] {
-  return isArrayOf<number>(x, isNumber);
+  return !isEmptyArray(x) && isArrayOf<number>(x, isNumber);
 }
 
 /**
@@ -142,7 +142,7 @@ export function isNumberArray(x: unknown): x is number[] {
  * @see   {@link isBoolean}
  */
 export function isBooleanArray(x: unknown): x is boolean[] {
-  return isArrayOf<boolean>(x, isBoolean);
+  return !isEmptyArray(x) && isArrayOf<boolean>(x, isBoolean);
 }
 
 /**
@@ -163,7 +163,7 @@ export function isBooleanArray(x: unknown): x is boolean[] {
  * @see   {@link isBigInt}
  */
 export function isBigIntArray(x: unknown): x is bigint[] {
-  return isArrayOf<bigint>(x, isBigInt);
+  return !isEmptyArray(x) && isArrayOf<bigint>(x, isBigInt);
 }
 
 /**
@@ -184,7 +184,7 @@ export function isBigIntArray(x: unknown): x is bigint[] {
  * @see   {@link isSymbol}
  */
 export function isSymbolArray(x: unknown): x is symbol[] {
-  return isArrayOf<symbol>(x, isSymbol);
+  return !isEmptyArray(x) && isArrayOf<symbol>(x, isSymbol);
 }
 
 /**
@@ -207,7 +207,7 @@ export function isSymbolArray(x: unknown): x is symbol[] {
 export function isFunctionArray(
   x: unknown
 ): x is ((...args: any[]) => unknown)[] {
-  return isArrayOf<(...args: any[]) => unknown>(x, isFunction);
+  return !isEmptyArray(x) && isArrayOf<(...args: any[]) => unknown>(x, isFunction);
 }
 
 /**
@@ -231,7 +231,7 @@ export function isFunctionArray(
  * @see   {@link isObject}
  */
 export function isObjectArray(x: unknown): x is object[] {
-  return isArrayOf<object>(x, isObject);
+  return !isEmptyArray(x) && isArrayOf<object>(x, isObject);
 }
 
 /**
@@ -254,7 +254,7 @@ export function isObjectArray(x: unknown): x is object[] {
 export function isPlainObjectArray(
   x: unknown
 ): x is Record<PropertyKey, unknown>[] {
-  return isArrayOf<Record<PropertyKey, unknown>>(x, isPlainObject);
+  return !isEmptyArray(x) && isArrayOf<Record<PropertyKey, unknown>>(x, isPlainObject);
 }
 
 /**
