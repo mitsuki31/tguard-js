@@ -7,9 +7,12 @@
 
 export * from './async/promise';
 export * from './builtins/array';
+export * from './builtins/date';
+export * from './builtins/error';
 export * from './builtins/function';
 export * from './builtins/object';
 export * from './builtins/primitive';
 export * from './envs/env';
 
-// ! DO NOT export `utils`
+// ! DO NOT export `utils` witbout namespace
+export * as utils from './utils';
