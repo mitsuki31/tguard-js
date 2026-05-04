@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "typeguard",
+      "name": "tguard-js",
       "devDependencies": {
         "@tsconfig/node14": "^14.1.8",
         "@types/jest": "^30.0.0",

@@ -19,7 +19,7 @@ function processValue(value: unknown) {
 ## Custom Array Validation
 
 ```typescript
-import { isArrayOf, isString, isNumber } from 'typeguard-js';
+import { isArrayOf, isString, isNumber } from 'tguard-js';
 
 const isStringOrNumber = (v: any): v is string | number =>
   isString(v) || isNumber(v);
@@ -33,7 +33,7 @@ if (isArrayOf(data, isStringOrNumber)) {
 ## Validating Complex Objects
 
 ```typescript
-import { isRecord, isString, isNumber } from 'typeguard-js';
+import { isRecord, isString, isNumber } from 'tguard-js';
 
 function validateConfig(config: unknown) {
   return (
@@ -48,7 +48,7 @@ function validateConfig(config: unknown) {
 ## Error Handling
 
 ```typescript
-import { normalizeError } from 'typeguard-js';
+import { normalizeError } from 'tguard-js';
 
 try {
   // Some operation that might throws
@@ -66,7 +66,7 @@ try {
 import {
   isRecord, isString, isNumber,
   isArray, isArrayOf
-} from 'typeguard-js';
+} from 'tguard-js';
 
 interface User {
   id: number;
@@ -94,8 +94,8 @@ function handleUsers(response: unknown) {
 ## Validating Environment Configuration
 
 ```typescript
-import { isString, isNumber, isNonNullish } from 'typeguard-js';
-import { isEnvDefined } from 'typeguard-js';
+import { isString, isNumber, isNonNullish } from 'tguard-js';
+import { isEnvDefined } from 'tguard-js';
 
 function validateEnv() {
   const config = {
@@ -115,7 +115,7 @@ function validateEnv() {
 ## Handling Unknown Thrown Values
 
 ```typescript
-import { ensureError } from 'typeguard-js';
+import { ensureError } from 'tguard-js';
 
 async function safeExecute(fn: async () => Promise<any>) {
   try {

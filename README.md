@@ -1,4 +1,4 @@
-# typeguard-js
+# tguard-js
 
 A small, focused runtime type-checking library for TypeScript and JavaScript.
 Provides reliable type guards with accurate narrowing, predictable behavior, and consistent handling of edge cases.
@@ -27,7 +27,7 @@ It gives you a consistent set of utilities, so you can focus on building instead
 
 ---
 
-## Why `typeguard-js`?
+## Why `tguard-js`?
 
 JavaScript’s built-in type checks are inconsistent and sometimes misleading.
 
@@ -45,10 +45,10 @@ These results are technically correct by specification, but not useful for runti
 
 ---
 
-### `typeguard-js` Approach
+### `tguard-js` Approach
 
 ```js
-import * as TG from 'typeguard-js';
+import * as TG from 'tguard-js';
 
 TG.isNull(null);        // true
 TG.isArray([]);         // true
@@ -72,11 +72,11 @@ The library prioritizes **predictability over spec quirks**.
 ## Installation
 
 ```bash
-bun install typeguard-js
+bun install tguard-js
 ```
 
 ```bash
-npm install typeguard-js
+npm install tguard-js
 ```
 
 ---
@@ -84,7 +84,7 @@ npm install typeguard-js
 ## Quick Start
 
 ```ts
-import { isString, isArray, isRecord } from 'typeguard-js';
+import { isString, isArray, isRecord } from 'tguard-js';
 
 if (isString(value)) {
   value.toUpperCase();

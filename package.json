@@ -1,5 +1,5 @@
 {
-  "name": "typeguard",
+  "name": "tguard-js",
   "description": "Runtime type safety for JavaScript.",
   "version": "1.0.0",
   "type": "commonjs",
@@ -28,9 +28,9 @@
   "author": "Ryuu Mitsuki (https://github.com/mitsuki31)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mitsuki31/typeguard-js.git"
+    "url": "git+https://github.com/mitsuki31/tguard-js.git"
   },
-  "homepage": "https://github.com/mitsuki31/typeguard-js#readme",
+  "homepage": "https://github.com/mitsuki31/tguard-js#readme",
   "keywords": [
     "javascript",
     "typeguard",

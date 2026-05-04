@@ -3,7 +3,7 @@
 > [!NOTE]\
 > This page highlights the most commonly used APIs.
 
-`typeguard-js` provides a set of runtime guards grouped by responsibility: primitives, objects, collections, functions, and utilities. Each function is designed to either **narrow types safely** or **validate runtime state explicitly**.
+`tguard-js` provides a set of runtime guards grouped by responsibility: primitives, objects, collections, functions, and utilities. Each function is designed to either **narrow types safely** or **validate runtime state explicitly**.
 
 ---
 
@@ -16,7 +16,7 @@ import {
   isString, isNumber, isBoolean, isBigInt, isSymbol,
   isNull, isUndefined, isNullish, isNonNullish,
   isPrimitive, isFinite, isInfinite, isNaN
-} from 'typeguard-js';
+} from 'tguard-js';
 ```
 
 ```ts
@@ -54,7 +54,7 @@ Validates object structure and runtime state.
 import {
   isObject, isPlainObject, isRecord,
   isEmptyObject, isSealed, isFrozen, isExtensible
-} from 'typeguard-js';
+} from 'tguard-js';
 ```
 
 ```ts
@@ -87,7 +87,7 @@ import {
   isStringArray, isNumberArray, isBooleanArray,
   isBigIntArray, isSymbolArray, isFunctionArray,
   isObjectArray, isPlainObjectArray
-} from 'typeguard-js';
+} from 'tguard-js';
 ```
 
 ```ts
@@ -117,7 +117,7 @@ isPlainObjectArray([{}, {}])        // true
 Distinguishes between callable values and class constructors.
 
 ```ts
-import { isFunction, isClass, isCallable } from 'typeguard-js';
+import { isFunction, isClass, isCallable } from 'tguard-js';
 ```
 
 ```ts
@@ -144,7 +144,7 @@ Covers date objects and string parsing.
 import {
   isDate, isValidDate,
   isISODateString, isDateString
-} from 'typeguard-js';
+} from 'tguard-js';
 ```
 
 ```ts
@@ -173,7 +173,7 @@ import {
   isError, isErrorLike, hasErrorMessage,
   isTypeError, isRangeError, isReferenceError, isSyntaxError,
   normalizeError, ensureError
-} from 'typeguard-js';
+} from 'tguard-js';
 ```
 
 ```ts
@@ -217,7 +217,7 @@ try {
 Checks for promises and thenable objects.
 
 ```ts
-import { isPromise, isPromiseLike } from 'typeguard-js';
+import { isPromise, isPromiseLike } from 'tguard-js';
 ```
 
 ```ts
@@ -237,7 +237,7 @@ isPromiseLike({ then: () => {} })  // true
 Utility for environment variables.
 
 ```ts
-import { isEnvDefined } from 'typeguard-js';
+import { isEnvDefined } from 'tguard-js';
 ```
 
 ```ts
@@ -251,7 +251,9 @@ isEnvDefined(process.env.API_KEY) // true if non-empty string
 Low-level helpers for type inspection.
 
 ```ts
-import { hasOwn, getType, typeOf } from 'typeguard-js/utils';
+import { hasOwn, getType, typeOf } from 'tguard-js/utils';
+// Or: import TG from 'tguard-js';
+//     const { hasOwn, getType, typeOf } = TG.utils;
 ```
 
 ```ts
