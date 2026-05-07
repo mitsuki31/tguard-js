@@ -56,7 +56,7 @@ try {
   // Handle any thrown value
   const error = normalizeError(err);
   console.error(error.message);
-  console.error(error.cause || error._cause);
+  console.error(error.cause);
 }
 ```
 
@@ -126,7 +126,7 @@ async function safeExecute(fn: async () => Promise<any>) {
     logger.error('Execution failed', {
       message: error.message,
       stack: error.stack,
-      originalCause: error.cause || error._cause,
+      cause: error.cause,
     });
 
     throw error;

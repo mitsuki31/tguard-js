@@ -151,9 +151,7 @@ export function hasErrorMessage(x: unknown): x is { message: string } {
  * - If the value is error-like (`{ message: string }`), it is converted
  * - Otherwise, the value is stringified into an error message
  *
- * The original value is attached to the returned error as `cause`
- * (if supported) or as a fallback `_cause` property (for older environments).
- *
+ * The original value is attached to the returned error as `cause`.
  * If there is a stack trace in the provided value, it will be preserved.
  *
  * | Input                        | Output message        |
@@ -175,7 +173,7 @@ export function hasErrorMessage(x: unknown): x is { message: string } {
  * } catch (err) {
  *   const error = normalizeError(err);
  *   console.log(error.message); // 'Something went wrong'
- *   console.log(error.cause || error._cause); // { message: 'Something went wrong' }
+ *   console.log(error.cause); // { message: 'Something went wrong' }
  * }
  * ```
  *
@@ -231,7 +229,7 @@ export function normalizeError(x: unknown): Error {
  * } catch (err) {
  *   const error = ensureError(err);
  *   console.log(error.message); // 'Something went wrong'
- *   console.log(error.cause || error._cause); // { message: 'Something went wrong' }
+ *   console.log(error.cause); // { message: 'Something went wrong' }
  * }
  * ```
  *
