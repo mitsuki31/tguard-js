@@ -56,7 +56,7 @@ export function isArray(x: unknown): x is unknown[] {
  * | `[1, 2, 3]`        | `isNumber`          | `true` |
  * | `[1, 'a']`         | `isNumber`          | `false`|
  * | `[]`               | `isNumber`          | `true` |
- * | `'text'`           | `isString`          | `false`|
+ * | `'text'`           | `isString`          | `true` |
  * | `{}`               | `isString`          | `false`|
  *
  * This function also supports union types checking:
