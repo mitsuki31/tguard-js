@@ -9,8 +9,8 @@ describe('internal/utils', () => {
       const cause = new Error('cause');
       attachCause(error, cause);
 
-      // Should have either cause or _cause property
-      const actualCause = (error as any).cause || (error as any)._cause;
+      // Should have either cause
+      const actualCause = (error as any).cause;
       expect(actualCause).toMatchObject(cause);
     });
 
@@ -19,7 +19,7 @@ describe('internal/utils', () => {
       const cause = { message: 'error-like' };
       attachCause(error, cause);
 
-      const actualCause = (error as any).cause || (error as any)._cause;
+      const actualCause = (error as any).cause;
       expect(actualCause).toMatchObject(cause);
     });
 
@@ -27,7 +27,7 @@ describe('internal/utils', () => {
       const error = new Error('test');
       attachCause(error, 'string cause');
 
-      const actualCause = (error as any).cause || (error as any)._cause;
+      const actualCause = (error as any).cause;
       expect(actualCause).toStrictEqual('string cause');
     });
 
@@ -35,7 +35,7 @@ describe('internal/utils', () => {
       const error = new Error('test');
       attachCause(error, null);
 
-      const actualCause = (error as any).cause || (error as any)._cause;
+      const actualCause = (error as any).cause;
       expect(actualCause).toBeNull();
     });
 
@@ -43,18 +43,19 @@ describe('internal/utils', () => {
       const error = new Error('test');
       attachCause(error, undefined);
 
-      const actualCause = (error as any).cause || (error as any)._cause;
+      const actualCause = (error as any).cause;
       expect(actualCause).toBeUndefined();
     });
 
-    test('should not preserve existing cause property', () => {
+    test('should override existing cause property', () => {
       const error = new Error('test');
       const cause = new Error('cause');
       (error as any).cause = cause;
       attachCause(error, new Error('new cause'));
 
-      const actualCause = (error as any).cause || (error as any)._cause;
-      expect(actualCause).toMatchObject(cause);
+      const actualCause = (error as any).cause;
+      expect((actualCause as Error).message).toStrictEqual('new cause');
+      expect(actualCause).not.toMatchObject(cause);
     });
   });
 
