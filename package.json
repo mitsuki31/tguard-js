@@ -1,9 +1,11 @@
 {
   "name": "tguard-js",
   "description": "Runtime type safety for JavaScript.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "commonjs",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "exports": {
     ".": "./dist/index.js",
     "./utils": "./dist/utils/index.js"
