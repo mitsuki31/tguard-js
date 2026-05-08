@@ -55,22 +55,29 @@ describe('typeguard/utils', () => {
       value: function () {},
       expected: {
         default: 'function',
-        nameOnly: 'function',
+        nameOnly: 'value',  // Return the field name above
       },
     },
     {
       value: () => ({}),
       expected: {
         default: 'function',
-        nameOnly: 'function',
+        nameOnly: 'value',  // Return the field name above
       },
     },
     {
       value: () => {},
       expected: {
         default: 'function',
-        nameOnly: 'function',
+        nameOnly: 'value',  // Return the field name above
       },
+    },
+    {
+      value: class {},
+      expected: {
+        default: 'function',  // ES6 class always returned as function
+        nameOnly: 'value'     // Return the field name above
+      }
     },
     {
       value: {},
@@ -222,6 +229,12 @@ describe('typeguard/utils', () => {
         expect(getType(type.value, true)).toBe(type.expected.nameOnly);
       });
     });
+
+    test("should return '(anonymous)' for classes/functions without bindings when nameOnly is true", () => {
+      [() => {}, function () {}, class {}].forEach((type) => {
+        expect(getType(type, true)).toBe('(anonymous)');
+      });
+    })
 
     test('should handle class instances correctly', () => {
       class MyClass {}

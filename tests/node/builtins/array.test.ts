@@ -104,8 +104,8 @@ describe('builtins/array', () => {
       expect(isStringArray([''])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isStringArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isStringArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-string elements', () => {
@@ -131,8 +131,8 @@ describe('builtins/array', () => {
       expect(isNumberArray([NaN, Infinity, -Infinity])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isNumberArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isNumberArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-number elements', () => {
@@ -161,8 +161,8 @@ describe('builtins/array', () => {
       expect(isBooleanArray([true, true, false])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isBooleanArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isBooleanArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-boolean elements', () => {
@@ -187,8 +187,8 @@ describe('builtins/array', () => {
       expect(isBigIntArray([0n, -1n])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isBigIntArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isBigIntArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-bigint elements', () => {
@@ -217,8 +217,8 @@ describe('builtins/array', () => {
       expect(isSymbolArray([Symbol.iterator, Symbol.hasInstance])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isSymbolArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isSymbolArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-symbol elements', () => {
@@ -244,8 +244,8 @@ describe('builtins/array', () => {
       ).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isFunctionArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isFunctionArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-function elements', () => {
@@ -270,8 +270,8 @@ describe('builtins/array', () => {
       expect(isObjectArray([new Date(), new Map()])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isObjectArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isObjectArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-object elements', () => {
@@ -296,8 +296,8 @@ describe('builtins/array', () => {
       expect(isPlainObjectArray([Object.create(null)])).toBe(true);
     });
 
-    test('should return true for empty arrays', () => {
-      expect(isPlainObjectArray([])).toBe(true);
+    test('should return false for empty arrays', () => {
+      expect(isPlainObjectArray([])).toBe(false);
     });
 
     test('should return false for arrays with non-plain objects', () => {
@@ -338,6 +338,7 @@ describe('builtins/array', () => {
       expect(isEmptyArray([''])).toBe(false);
       expect(isEmptyArray([null])).toBe(false);
       expect(isEmptyArray([undefined])).toBe(false);
+      expect(isEmptyArray(new Array(10))).toBe(false);
     });
 
     test('should return false for arrays with holes', () => {
