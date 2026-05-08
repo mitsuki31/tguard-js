@@ -116,12 +116,6 @@ export function getType(x: unknown, nameOnly?: boolean): string {
 
     const fnStr = Function.prototype.toString.call(fn);
 
-    // Try extract from function declaration
-    let match = /^function\s+([^\s(]+)/.exec(fnStr);
-    // Try extract from class declaration
-    if (!match) match = /^class\s+([^\s{]+)/.exec(fnStr);
-    if (match) return match[1];
-
     if (/^class\s*\{/.test(fnStr)) return '(anonymous)';  // Detect anonymous class
     return '(anonymous)';  // Anonymous / arrow function
   }

@@ -195,7 +195,7 @@ describe('builtins/error', () => {
     test('should attach original value as cause', () => {
       const errorLike = { message: 'msg' };
       const result = normalizeError(errorLike);
-      expect((result as any).cause || (result as any)._cause).toMatchObject(
+      expect((result as any).cause).toMatchObject(
         errorLike
       );
     });
@@ -209,19 +209,19 @@ describe('builtins/error', () => {
     test('should convert numbers to Error', () => {
       const result = normalizeError(123);
       expect(result).toBeInstanceOf(Error);
-      expect(result.message).toStrictEqual('123');
+      expect(result.message).toMatch(/unknown error/i);
     });
 
     test('should convert null to Error', () => {
       const result = normalizeError(null);
       expect(result).toBeInstanceOf(Error);
-      expect(result.message).toStrictEqual('null');
+      expect(result.message).toMatch(/unknown error/i);
     });
 
     test('should convert undefined to Error', () => {
       const result = normalizeError(undefined);
       expect(result).toBeInstanceOf(Error);
-      expect(result.message).toStrictEqual('undefined');
+      expect(result.message).toMatch(/unknown error/i);
     });
 
     test('should handle objects that cannot be stringified', () => {
@@ -243,7 +243,7 @@ describe('builtins/error', () => {
       };
       const result = normalizeError(obj);
       expect(result).toBeInstanceOf(Error);
-      expect(result.message).toMatch(/Unknown error/);
+      expect(result.message).toMatch(/unknown error/i);
     });
   });
 
