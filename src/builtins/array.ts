@@ -207,7 +207,9 @@ export function isSymbolArray(x: unknown): x is symbol[] {
 export function isFunctionArray(
   x: unknown
 ): x is ((...args: any[]) => unknown)[] {
-  return !isEmptyArray(x) && isArrayOf<(...args: any[]) => unknown>(x, isFunction);
+  return (
+    !isEmptyArray(x) && isArrayOf<(...args: any[]) => unknown>(x, isFunction)
+  );
 }
 
 /**
@@ -254,7 +256,10 @@ export function isObjectArray(x: unknown): x is object[] {
 export function isPlainObjectArray(
   x: unknown
 ): x is Record<PropertyKey, unknown>[] {
-  return !isEmptyArray(x) && isArrayOf<Record<PropertyKey, unknown>>(x, isPlainObject);
+  return (
+    !isEmptyArray(x) &&
+    isArrayOf<Record<PropertyKey, unknown>>(x, isPlainObject)
+  );
 }
 
 /**

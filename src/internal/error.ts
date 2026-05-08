@@ -37,7 +37,10 @@ import { attachCause } from './utils';
  * @see {@link attachCause}
  */
 export function createError(message: string): Error;
-export function createError<C>(message: string, cause: C): Error & { readonly cause: C };
+export function createError<C>(
+  message: string,
+  cause: C
+): Error & { readonly cause: C };
 
 export function createError(message: string, cause?: unknown): Error {
   let err: Error;

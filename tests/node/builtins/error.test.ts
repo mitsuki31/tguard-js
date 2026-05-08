@@ -195,9 +195,7 @@ describe('builtins/error', () => {
     test('should attach original value as cause', () => {
       const errorLike = { message: 'msg' };
       const result = normalizeError(errorLike);
-      expect((result as any).cause).toMatchObject(
-        errorLike
-      );
+      expect((result as any).cause).toMatchObject(errorLike);
     });
 
     test('should convert strings to Error', () => {

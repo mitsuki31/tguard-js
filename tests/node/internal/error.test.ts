@@ -1,4 +1,4 @@
-import { createError } from "../../../src/internal/error";
+import { createError } from '../../../src/internal/error';
 
 type FutureError<C = unknown> = Error & { cause: C };
 
@@ -108,9 +108,7 @@ describe('internal/error', () => {
 
       const err = createError('test');
 
-      expect(
-        Object.prototype.hasOwnProperty.call(err, 'cause')
-      ).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(err, 'cause')).toBe(false);
     });
 
     test('should preserve explicit undefined cause in legacy runtime', () => {
@@ -118,9 +116,7 @@ describe('internal/error', () => {
 
       const err = createError('test', undefined) as FutureError;
 
-      expect(
-        Object.prototype.hasOwnProperty.call(err, 'cause')
-      ).toBe(true);
+      expect(Object.prototype.hasOwnProperty.call(err, 'cause')).toBe(true);
       expect(err.cause).toBeUndefined();
     });
   });

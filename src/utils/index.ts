@@ -116,8 +116,8 @@ export function getType(x: unknown, nameOnly?: boolean): string {
 
     const fnStr = Function.prototype.toString.call(fn);
 
-    if (/^class\s*\{/.test(fnStr)) return '(anonymous)';  // Detect anonymous class
-    return '(anonymous)';  // Anonymous / arrow function
+    if (/^class\s*\{/.test(fnStr)) return '(anonymous)'; // Detect anonymous class
+    return '(anonymous)'; // Anonymous / arrow function
   }
 
   // Primitive (non-object)
