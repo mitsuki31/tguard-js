@@ -7,6 +7,7 @@
  * @since    1.0.0
  */
 
+import { createError } from '../internal/error';
 import { attachCause, toString } from '../internal/utils';
 import { isObject } from './object';
 import { isString } from './primitive';
@@ -187,29 +188,18 @@ export function normalizeError(x: unknown): Error {
 
   // 2. Error-like object -> use message
   if (isErrorLike(x)) {
-    const err = new Error(x.message);
+    const err = createError(x.message, x);
+
     // Preserve stack trace
-    if ('stack' in x) {
-      const stack = (x as any).stack;
-      if (typeof stack === 'string') err.stack = stack;
+    if ('stack' in x && typeof x.stack === 'string') {
+      err.stack = x.stack;
     }
 
-    attachCause(err, x);
     return err;
   }
 
-  // 3. Fallback: stringify
-  let message: string;
-  try {
-    message = String(x);
-  } catch {
-    message = '[Unknown error]';
-  }
-
-  const err = new Error(message);
-
-  attachCause(err, x);
-  return err;
+  // 3. Fallback -> stringify
+  return createError(typeof x === 'string' ? x : '[Unknown error]', x);
 }
 
 /**
