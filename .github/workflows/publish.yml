@@ -43,6 +43,9 @@ jobs:
         run: bun pm pack --dry-run
 
       - name: Publish to npm registry
-        run: npm pkg delete devDependencies && npm publish --access public
+        run: |
+          npm config set //registry.npmjs.org/:_authToken "${NPM_TOKEN}"
+          npm pkg delete devDependencies
+          npm publish --access public
         env:
-          NPM_TOKEN: ${{ env.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
