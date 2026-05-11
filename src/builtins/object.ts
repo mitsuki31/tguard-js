@@ -9,6 +9,8 @@
 
 import { getProto } from '../internal/utils';
 
+type Predicate<K, V> = (key: K, value: unknown) => value is V;
+
 /**
  * Determines whether the provided value is an object (excluding `null`).
  *
@@ -92,6 +94,92 @@ export function isPlainObject(o: unknown): o is Record<PropertyKey, unknown> {
  */
 export function isRecord(o: unknown): o is Record<PropertyKey, unknown> {
   return isPlainObject(o);
+}
+
+/**
+ * Determines whether the provided value is a record whose entries
+ * satisfy the given predicate.
+ *
+ * @remarks
+ * This function validates both the property keys and values of an object
+ * using a custom predicate callback.
+ *
+ * By default, only enumerable string keys are checked using `Object.keys()`.
+ * When `includeHidden` is enabled, all own property keys are inspected
+ * using `Reflect.ownKeys()`, including:
+ *
+ * - non-enumerable properties
+ * - symbol keys
+ *
+ * The predicate receives:
+ *
+ * - the current property key
+ * - the associated property value
+ *
+ * and must return whether the value satisfies the expected type.
+ *
+ * @example
+ * Validate a record of strings:
+ *
+ * ```typescript
+ * isRecordOf(
+ *   { a: 'hello', b: 'world' },
+ *   (_k, v): v is string => isString(v)
+ * ); // true
+ * ```
+ *
+ * Validate key-sensitive values:
+ *
+ * ```typescript
+ * isRecordOf(
+ *   { port: 3000 },
+ *   (k, v): v is number => {
+ *     return k === 'port' && isNumber(v);
+ *   }
+ * );
+ * ```
+ *
+ * Include non-enumerable and symbol keys:
+ *
+ * ```typescript
+ * const obj = Object.defineProperty(
+ *   { [Symbol('id')]: 123 },
+ *   'hidden',
+ *   {
+ *     value: 456,
+ *     enumerable: false,
+ *   }
+ * );
+ *
+ * isRecordOf(obj, (_k, v): v is number => {
+ *   return isNumber(v);
+ * }, true);
+ * ```
+ *
+ * @param o - The value to validate.
+ * @param predicate - A predicate used to validate each entry value.
+ * @param includeHidden - Whether to include non-enumerable and symbol keys.
+ *
+ * @returns `true` if all entries satisfy the predicate, otherwise `false`.
+ *
+ * @since 1.1.0
+ * @see   {@link isRecord}
+ */
+export function isRecordOf<K extends PropertyKey, V>(
+  o: unknown,
+  predicate: Predicate<K, V>,
+  includeHidden?: boolean
+): o is Record<K, V> {
+  if (!isRecord(o)) return false;
+
+  const keys = (includeHidden ? Reflect.ownKeys(o) : Object.keys(o)) as K[];
+  for (const key of keys) {
+    const value = (o as Record<PropertyKey, unknown>)[key];
+
+    if (!predicate(key, value)) return false;
+  }
+
+  return true;
 }
 
 /**
