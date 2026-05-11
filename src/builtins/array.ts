@@ -9,6 +9,8 @@ import { isObject, isPlainObject } from './object';
 import { isFunction } from './function';
 import { isBigInt, isBoolean, isNumber, isString, isSymbol } from './primitive';
 
+type Predicate<T> = (value: unknown) => value is T;
+
 /**
  * Determines whether the provided value is an array.
  *
@@ -75,11 +77,115 @@ export function isArray(x: unknown): x is unknown[] {
  * @since 1.0.0
  * @see   {@link isArray}
  */
-export function isArrayOf<T>(
-  x: unknown,
-  predicate: (v: typeof x) => v is T
-): x is T[] {
+export function isArrayOf<T>(x: unknown, predicate: Predicate<T>): x is T[] {
   return isArray(x) && isFunction(predicate) && x.every(predicate);
+}
+
+/**
+ * Determines whether the provided value is a tuple whose entries
+ * satisfy the given predicates in positional order.
+ *
+ * @remarks
+ * This function performs strict tuple validation by ensuring:
+ *
+ * - the value is an array
+ * - the array length exactly matches the predicate count
+ * - each element satisfies the predicate at the same index
+ *
+ * Unlike {@linkcode isArrayOf}, tuple validation is positional and supports
+ * heterogeneous element types.
+ *
+ * ### Implementation Notes
+ *
+ * - Tuple validation is strict and positional.
+ * - Extra or missing elements will cause validation to fail.
+ * - Predicates are evaluated in order.
+ * - At runtime, tuples are validated as standard JavaScript arrays.
+ *
+ * @example
+ * Validate a string-number tuple:
+ *
+ * ```typescript
+ * isTuple(
+ *   ['hello', 123],
+ *   [isString, isNumber]
+ * ); // true
+ * ```
+ *
+ * Heterogeneous check:
+ *
+ * ```typescript
+ * isTuple(
+ *   ['foo', 'bar', '__not_foo_'],
+ *   isString
+ * ); // true
+ * ```
+ *
+ * Invalid tuple length:
+ *
+ * ```typescript
+ * isTuple(
+ *   ['hello', 123, true],
+ *   [isString, isNumber]
+ * ); // false
+ * ```
+ *
+ * Invalid tuple ordering:
+ *
+ * ```typescript
+ * isTuple(
+ *   [123, 'hello'],
+ *   [isString, isNumber]
+ * ); // false
+ * ```
+ *
+ * Empty tuple:
+ *
+ * ```typescript
+ * isTuple([], []); // true
+ * ```
+ *
+ * @typeParam T - The tuple type inferred from the predicate list.
+ *
+ * @param x - The value to validate.
+ * @param predicates - Predicates used to validate each tuple position.
+ *
+ * @returns `true` if the value satisfies the tuple structure, otherwise `false`.
+ *
+ * @since 1.1.0
+ */
+export function isTuple<T>(
+  x: unknown,
+  predicate: Predicate<T>
+): x is readonly [T, ...T[]];
+
+export function isTuple<T extends readonly unknown[]>(
+  x: unknown,
+  predicates: readonly [...{ [K in keyof T]: Predicate<T[K]> }]
+): x is T;
+
+export function isTuple(
+  x: unknown,
+  predicates: Predicate<unknown> | readonly Predicate<unknown>[]
+): boolean {
+  if (!isArray(x)) return false;
+
+  // Single predicate -> homogeneous tuple/array
+  if (isFunction(predicates)) {
+    if (x.length === 0) return false;
+    return x.every((v) => predicates(v));
+  }
+
+  // Tuple predicates
+  if (x.length !== predicates.length) {
+    return false;
+  }
+
+  for (let i = 0; i < predicates.length; i++) {
+    if (!predicates[i](x[i])) return false;
+  }
+
+  return true;
 }
 
 /**
