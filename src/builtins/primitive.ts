@@ -181,6 +181,104 @@ export function isNumber(x: unknown): x is number {
 }
 
 /**
+ * Determines whether the provided value is a finite integer number.
+ *
+ * @remarks
+ * This function returns `true` only for finite numeric values that have
+ * no fractional component.
+ *
+ * This excludes:
+ *
+ * - `NaN`
+ * - `Infinity`
+ * - `-Infinity`
+ * - non-number values
+ *
+ * @example
+ * ```typescript
+ * isInteger(42);    // true
+ * isInteger(-10);   // true
+ * isInteger(3.14);  // false
+ * isInteger(NaN);   // false
+ * isInteger('42');  // false
+ * ```
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is a finite integer.
+ *
+ * @since 1.1.0
+ * @see   {@link isSafeInteger}
+ * @see   {@link isFloat}
+ */
+export function isInteger(x: unknown): x is number {
+  return isNumber(x) && Number.isInteger(x);
+}
+
+/**
+ * Determines whether the provided value is a safe integer number.
+ *
+ * @remarks
+ * A safe integer is an integer that can be exactly represented within
+ * JavaScript's IEEE-754 double-precision range:
+ *
+ * ```text
+ * -(2^53 - 1) to 2^53 - 1
+ * ```
+ *
+ * \[
+ * [-(2^{53}-1),\ 2^{53}-1]
+ * \]
+ *
+ * @example
+ * ```typescript
+ * isSafeInteger(42); // true
+ * isSafeInteger(Number.MAX_SAFE_INTEGER); // true
+ * isSafeInteger(Number.MAX_SAFE_INTEGER + 1); // false
+ * ```
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is a safe integer.
+ *
+ * @since 1.1.0
+ * @see   {@link isInteger}
+ */
+export function isSafeInteger(x: unknown): x is number {
+  return isNumber(x) && Number.isSafeInteger(x);
+}
+
+/**
+ * Determines whether the provided value is a finite non-integer number.
+ *
+ * @remarks
+ * This function returns `true` only for finite numeric values that
+ * contain a fractional component.
+ *
+ * ### Implementation Notes
+ *
+ * JavaScript does not distinguish integer and floating-point types at
+ * runtime. This function treats any number without a fractional part as
+ * an integer, even if written with decimal notation (e.g. `1.0`).
+ *
+ * @example
+ * ```typescript
+ * isFloat(3.14);  // true
+ * isFloat(-0.5);  // true
+ * isFloat(42);    // false
+ * isFloat(1.0);   // false (not a bug)
+ * isFloat(NaN);   // false
+ * ```
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is a finite non-integer number.
+ *
+ * @since 1.1.0
+ * @see   {@link isInteger}
+ */
+export function isFloat(x: unknown): x is number {
+  return isNumber(x) && Number.isFinite(x) && !Number.isInteger(x);
+}
+
+/**
  * Determines whether the provided value is a finite number.
  *
  * | Value        | Result  |
