@@ -64,6 +64,90 @@ export function isString(x: unknown): x is string {
   return typeof x === 'string';
 }
 
+/**
+ * Determines whether the provided value is a string containing only
+ * ASCII characters.
+ *
+ * @remarks
+ * This function validates that all characters in the string fall within
+ * the ASCII range (`0x00` to `0x7F`), including control characters.
+ *
+ * This includes:
+ *
+ * - printable characters (`A-Z`, `a-z`, `0-9`, punctuation)
+ * - control characters (`\n`, `\r`, `\t`, etc.)
+ * - null character (`\0`)
+ *
+ * @example
+ * Valid ASCII strings:
+ *
+ * ```typescript
+ * isASCIIString('hello'); // true
+ * isASCIIString('hello\n'); // true
+ * isASCIIString(''); // true
+ * ```
+ *
+ * Invalid non-ASCII strings:
+ *
+ * ```typescript
+ * isASCIIString('こんにちは'); // false
+ * isASCIIString('café'); // false
+ * isASCIIString('✓'); // false
+ * ```
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is a string containing only ASCII characters.
+ *
+ * @since 1.1.0
+ * @see   {@link isPrintableASCIIString}
+ */
+export function isASCIIString(x: unknown): x is string {
+  if (!isString(x)) return false;
+  return /^[\x00-\x7F]*$/.test(x);
+}
+
+/**
+ * Determines whether the provided value is a string containing only
+ * printable ASCII characters.
+ *
+ * @remarks
+ * This function validates that all characters fall within the printable
+ * ASCII range (`0x20` to `0x7E`).
+ *
+ * This excludes:
+ *
+ * - control characters (`\n`, `\r`, `\t`)
+ * - null character (`\0`)
+ * - non-ASCII Unicode characters
+ *
+ * @example
+ * Valid printable ASCII strings:
+ *
+ * ```typescript
+ * isPrintableASCIIString('hello'); // true
+ * isPrintableASCIIString('Hello 123!'); // true
+ * isPrintableASCIIString(''); // true
+ * ```
+ *
+ * Invalid strings:
+ *
+ * ```typescript
+ * isPrintableASCIIString('hello\n'); // false
+ * isPrintableASCIIString('\ttext'); // false
+ * isPrintableASCIIString('é'); // false
+ * ```
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is a string containing only printable ASCII characters.
+ *
+ * @since 1.1.0
+ * @see   {@link isASCIIString}
+ */
+export function isPrintableASCIIString(x: unknown): x is string {
+  if (!isString(x)) return false;
+  return /^[\x20-\x7E]*$/.test(x);
+}
+
 //#endregion
 //#region Number
 
