@@ -11,6 +11,8 @@ import { isBigInt, isBoolean, isNumber, isString, isSymbol } from './primitive';
 
 type Predicate<T> = (value: unknown) => value is T;
 
+//#region Structure Checks
+
 /**
  * Determines whether the provided value is an array.
  *
@@ -368,6 +370,84 @@ export function isPlainObjectArray(
   );
 }
 
+//#endregion
+//#region Semantic Checks
+
+/**
+ * Determines whether the provided array contains only unique values.
+ *
+ * @remarks
+ * This function checks for duplicate entries using JavaScript `Set`
+ * semantics (`SameValueZero` equality).
+ *
+ * This means:
+ *
+ * - primitive values are compared by value
+ * - object values are compared by reference identity
+ * - `NaN` is considered equal to `NaN`
+ *
+ * ### Implementation Notes
+ *
+ * - This function does not perform deep equality comparison.
+ * - Arrays containing structurally equal but different object references
+ *   are considered unique.
+ *
+ * @example
+ * Unique primitive values:
+ *
+ * ```typescript
+ * isUniqueArray([1, 2, 3]); // true
+ * ```
+ *
+ * Duplicate primitive values:
+ *
+ * ```typescript
+ * isUniqueArray([1, 2, 1]); // false
+ * ```
+ *
+ * Object references:
+ *
+ * ```typescript
+ * const a = {};
+ * const b = {};
+ *
+ * isUniqueArray([a, b]); // true
+ * isUniqueArray([a, a]); // false
+ * ```
+ *
+ * `NaN` handling:
+ *
+ * ```typescript
+ * isUniqueArray([NaN, NaN]); // false
+ * ```
+ *
+ * Empty arrays will returns `true` because there's no duplicate elements:
+ *
+ * ```typescript
+ * isUniqueArray([]); // true
+ * ```
+ *
+ * A better way if want to check if the array is unique and is not empty:
+ *
+ * ```typescript
+ * if (!isEmptyArray(arr) && isUniqueArray(arr)) {
+ *   // ...
+ * }
+ * ```
+ *
+ * @param x - The value to validate.
+ *
+ * @returns `true` if the array contains no duplicate entries, otherwise `false`.
+ *
+ * @since 1.1.0
+ */
+export function isUniqueArray(x: unknown): x is unknown[] {
+  if (!isArray(x)) return false;
+
+  const copy = new Set(x);
+  return copy.size === x.length;
+}
+
 /**
  * Determines whether the provided value is an empty array.
  *
@@ -401,3 +481,5 @@ export function isEmptyArray(x: unknown): x is [] {
 export function isReadonlyArray(x: unknown): x is readonly unknown[] {
   return isArray(x) && Object.isFrozen(x);
 }
+
+//#endregion
