@@ -114,7 +114,7 @@ export function isArrayOf<T>(x: unknown, predicate: Predicate<T>): x is T[] {
  * ); // true
  * ```
  *
- * Heterogeneous check:
+ * Homogeneous tuple check:
  *
  * ```typescript
  * isTuple(
@@ -520,6 +520,114 @@ export function isDenseArray(x: unknown): x is unknown[] {
  */
 export function isReadonlyArray(x: unknown): x is readonly unknown[] {
   return isArray(x) && Object.isFrozen(x);
+}
+
+//#endregion
+//#region 2D Arrays
+
+/**
+ * Determines whether the provided value is a two-dimensional array.
+ *
+ * @remarks
+ * A value is considered a 2D array if:
+ *
+ * - it is an array
+ * - every element is also an array
+ *
+ * The inner array element types are not validated.
+ *
+ * ### Examples
+ *
+ * | Value               | Result  |
+ * | ------------------- | ------- |
+ * | `[]`                | `false` |
+ * | `[[]]`              | `true`  |
+ * | `[[1, 2], [3]]`     | `true`  |
+ * | `[['a'], [1]]`      | `true`  |
+ * | `[1, 2, 3]`         | `false` |
+ * | `{}`                | `false` |
+ * | `null`              | `false` |
+ *
+ * ### Implementation Notes
+ *
+ * - Empty two-dimensional array are considered valid.
+ * - Inner arrays may contain values of any type.
+ * - This function checks only array nesting depth, not contents.
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is a two-dimensional array.
+ *
+ * @since 1.1.0
+ *
+ * @see {@link isMatrix}
+ */
+export function is2DArray(x: unknown): x is unknown[][] {
+  if (!isArray(x)) return false;
+  if (x.length === 0) return false;
+
+  for (const val of x) {
+    // Strictly return false if one of them is not an array
+    if (!isArray(val)) return false;
+  }
+
+  return true;
+}
+
+/**
+ * Determines whether the provided value is a numeric matrix.
+ *
+ * > In mathematics, a matrix is a rectangular array of numbers
+ * > or other mathematical objects with elements or entries arranged
+ * > in rows and columns.
+ * >
+ * > From Wikipedia (https://en.wikipedia.org/wiki/Matrix_(mathematics)).
+ *
+ * @remarks
+ * A value is considered a matrix if:
+ *
+ * - it is an array
+ * - every element is an array
+ * - every nested value is a number
+ *
+ * ### Examples
+ *
+ * | Value                  | Result  |
+ * | ---------------------- | ------- |
+ * | `[]`                   | `false` |
+ * | `[[]]`                 | `true`  |
+ * | `[[1, 2], [3, 4]]`     | `true`  |
+ * | `[[1], [2], [3]]`      | `true`  |
+ * | `[[1], [2, 3]]`        | `false` |
+ * | `[[1], ['a']]`         | `false` |
+ * | `[1, 2]`               | `false` |
+ * | `{}`                   | `false` |
+ *
+ * @param x - The value to validate.
+ * @returns `true` if the value is an array of number arrays.
+ *
+ * @since 1.1.0
+ *
+ * @see {@link is2DArray}
+ */
+export function isMatrix(x: unknown): x is number[][] {
+  if (!is2DArray(x)) return false;
+
+  let cols = -1;
+  for (const row of x) {
+    // Reject for sparse rows
+    if (!isDenseArray(row)) return false;
+
+    // Matrix entries must be number type
+    if (!row.every((v) => isNumber(v))) return false;
+
+    if (cols === -1) {
+      cols = row.length;
+    } else if (cols !== row.length) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 //#endregion
