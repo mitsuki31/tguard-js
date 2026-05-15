@@ -87,7 +87,10 @@ export function isPlainObject(o: unknown): o is Record<PropertyKey, unknown> {
 }
 
 /**
- * Alias for {@linkcode isPlainObject}.
+ * Determines whether the provided value is a plain object.
+ *
+ * @remarks
+ * This function is an alias for {@linkcode isPlainObject}.
  *
  * @param o - The value to be checked.
  * @returns `true` if the value is a plain object, otherwise `false`.
@@ -159,6 +162,9 @@ export function isRecord(o: unknown): o is Record<PropertyKey, unknown> {
  * }, true);
  * ```
  *
+ * @typeParam K - The union of property keys represented by the record.
+ * @typeParam V - The value type that each property must satisfy.
+ *
  * @param o - The value to validate.
  * @param predicate - A predicate used to validate each entry value.
  * @param includeHidden - Whether to include non-enumerable and symbol keys.
@@ -190,31 +196,57 @@ export function isRecordOf<K extends PropertyKey, V>(
  *
  * @remarks
  * A value is considered empty if it is a plain object with no own
- * enumerable string-keyed properties.
+ * properties.
  *
- * For checking an empty array, consider use
+ * By default, only enumerable string-keyed properties are checked.
+ * When `includeHidden` is enabled, all own properties are considered,
+ * including non-enumerable and symbol properties.
+ *
+ * For checking an empty array, consider using
  * {@linkcode builtins.array.isEmptyArray | isEmptyArray}.
  *
- * Non-enumerable and symbol properties are not considered.
+ * ### Examples
  *
- * | Value                         | Result |
- * | ----------------------------- | ------ |
- * | `{}`                          | `true` |
- * | `{ a: 1 }`                    | `false`|
- * | `Object.create(null)`         | `true` |
- * | `[]`                          | `false`|
- * | `new Date()`                  | `false`|
- * | `{ [Symbol('a')]: 1 }`        | `true` |
+ * Default behavior:
  *
- * @param o - The value to be checked.
- * @returns `true` if the value is an empty plain object.
+ * | Value                  | Result  |
+ * | ---------------------- | ------- |
+ * | `{}`                   | `true`  |
+ * | `{ a: 1 }`             | `false` |
+ * | `Object.create(null)`  | `true`  |
+ * | `[]`                   | `false` |
+ * | `new Date()`           | `false` |
+ * | `{ [Symbol('a')]: 1 }` | `true`  |
+ *
+ * With `includeHidden` set to `true`:
+ *
+ * | Value                  | Result  |
+ * | ---------------------- | ------- |
+ * | `{}`                   | `true`  |
+ * | `{ [Symbol('a')]: 1 }` | `false` |
+ *
+ * ### Implementation Notes
+ *
+ * - This function only checks own properties.
+ * - Prototype properties are ignored.
+ * - Arrays are not considered plain objects.
+ *
+ * @param o - The value to validate.
+ * @param includeHidden - Whether to include non-enumerable and symbol properties.
+ *
+ * @returns `true` if the value is an empty plain object, `false` otherwise.
  *
  * @since 1.0.0
- * @see   {@link isPlainObject}
+ * @see {@link isPlainObject}
  */
-export function isEmptyObject(o: unknown): boolean {
+export function isEmptyObject(
+  o: unknown,
+  includeHidden?: boolean
+): o is Record<PropertyKey, never> {
   if (!isPlainObject(o)) return false;
-  return Object.keys(o).length === 0;
+
+  const keys = includeHidden ? Reflect.ownKeys(o) : Object.keys(o);
+  return keys.length === 0;
 }
 
 /**
