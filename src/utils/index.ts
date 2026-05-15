@@ -151,6 +151,146 @@ export function hasKeys<K extends PropertyKey>(
 }
 
 /**
+ * Determines whether the provided value is an object matching the
+ * specified property shape.
+ *
+ * @remarks
+ * This function validates that:
+ *
+ * - the value is an object
+ * - all keys defined in `shape` exist as own properties
+ * - each corresponding property value satisfies its predicate
+ *
+ * Additional properties not defined in `shape` are allowed.
+ *
+ * Unlike {@linkcode hasKeys}, this function also validates the values of
+ * each property.
+ *
+ * Unlike {@link builtins.object.isRecordOf | isRecordOf},
+ * each property may use a different validator.
+ *
+ * ### Shape Key Behavior
+ *
+ * The `shape` descriptor always evaluates all own keys using
+ * `Reflect.ownKeys()`, including symbol and non-enumerable properties.
+ *
+ * The `includeHidden` option only controls whether the target object
+ * being validated includes non-enumerable and symbol keys.
+ *
+ * ### Array Behavior
+ *
+ * Arrays are treated as objects and are therefore supported.
+ *
+ * When validating arrays:
+ *
+ * - `Object.keys()` returns enumerable index keys (`'0'`, `'1'`, ...)
+ * - `Reflect.ownKeys()` additionally includes non-enumerable own keys
+ *   such as `'length'`
+ *
+ * ```javascript
+ * const arr = ['foo', null];
+ *
+ * hasShape(arr, {
+ *   '0': v => v === 'foo',
+ *   '1': v => v === null
+ * }); // true
+ * ```
+ *
+ * ### Implementation Notes
+ *
+ * - Only own properties are checked.
+ * - Prototype properties are ignored.
+ * - Additional properties are allowed.
+ * - Symbol and non-enumerable properties require `includeHidden` to be enabled.
+ *
+ * @example
+ * Basic usage:
+ *
+ * ```typescript
+ * hasShape(
+ *   { id: 1, name: 'Alice' },
+ *   {
+ *     id: isNumber,
+ *     name: isString
+ *   }
+ * ); // true
+ * ```
+ *
+ * Missing property:
+ *
+ * ```typescript
+ * hasShape(
+ *   { id: 1 },
+ *   {
+ *     id: isNumber,
+ *     name: isString
+ *   }
+ * ); // false
+ * ```
+ *
+ * Invalid property value:
+ *
+ * ```typescript
+ * hasShape(
+ *   { id: '1', name: 'Alice' },
+ *   {
+ *     id: isNumber,
+ *     name: isString
+ *   }
+ * ); // false
+ * ```
+ *
+ * Symbol keys:
+ *
+ * ```typescript
+ * const token = Symbol('token');
+ *
+ * hasShape(
+ *   { [token]: 'abc' },
+ *   {
+ *     [token]: isString
+ *   },
+ *   true
+ * ); // true
+ * ```
+ *
+ * @typeParam S - The object shape inferred from the predicate map.
+ *
+ * @param o - The value to validate.
+ * @param shape - An object whose values are predicates for each expected property.
+ * @param includeHidden - Whether to include non-enumerable and symbol keys.
+ *
+ * @returns `true` if the value matches the specified shape.
+ *
+ * @since 1.1.0
+ *
+ * @see {@link hasKeys}
+ * @see {@link builtins.object.isRecordOf}
+ */
+export function hasShape<S extends Record<PropertyKey, unknown>>(
+  o: unknown,
+  shape: { [K in keyof S]: (value: unknown) => value is S[K] },
+  includeHidden?: boolean
+): o is S {
+  if (o === null || typeof o !== 'object') return false;
+
+  const objectKeys = new Set(
+    (includeHidden ? Reflect.ownKeys(o) : Object.keys(o)) as (keyof S)[]
+  );
+
+  for (const key of Reflect.ownKeys(shape) as (keyof S)[]) {
+    if (!objectKeys.has(key)) return false;
+
+    const value = (o as Record<PropertyKey, unknown>)[key];
+    const predicate = shape[key];
+
+    if (!predicate(value)) return false;
+  }
+
+  return true;
+}
+
+/**
  * Returns the type of the provided value as a string.
  *
  * @remarks
