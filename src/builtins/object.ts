@@ -9,6 +9,9 @@
 
 import { getProto } from '../internal/utils';
 
+// --- Re-exports ---
+export { hasKeys, hasShape } from '../utils/index';
+
 type Predicate<K, V> = (key: K, value: unknown) => value is V;
 
 /**
