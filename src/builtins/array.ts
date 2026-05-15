@@ -468,6 +468,46 @@ export function isEmptyArray(x: unknown): x is [] {
 }
 
 /**
+ * Determine whether a value is a "dense" JavaScript array.
+ *
+ * A dense array, for the purposes of this function, is an array that:
+ * - is actually an array (`Array.isArray` equivalent), and
+ * - has exactly as many own enumerable keys as its `length` property.
+ *
+ * In practice this means:
+ * - Arrays with "holes" (e.g. created with `new Array(n)` or by leaving indices unset) are not dense.
+ * - Arrays with additional enumerable own properties (e.g. `arr.foo = 1`) are not dense.
+ * - Elements explicitly set to `undefined` still count as entries and do not make the array sparse.
+ *
+ * @example
+ * ```javascript
+ * // true: empty array has 0 keys and length 0
+ * isDenseArray([]); // true
+ *
+ * // true: element explicitly set (even if undefined) counts as an entry
+ * isDenseArray([undefined]); // true
+ *
+ * // false: "hole" at index 0 -> keys.length (0) !== length (1)
+ * isDenseArray(new Array(1)); // false
+ *
+ * // false: extra enumerable property increases keys.length beyond length
+ * const a = [1];
+ * a.foo = 'bar';
+ * isDenseArray(a); // false
+ * ```
+ *
+ * @param x - The value to test.
+ *
+ * @returns `true` if `x` is an array and the number of its own enumerable keys
+ *          equals its `length`; otherwise `false`.
+ *
+ * @since 1.1.0
+ */
+export function isDenseArray(x: unknown): x is unknown[] {
+  return isArray(x) && Object.keys(x).length === x.length;
+}
+
+/**
  * Determines whether the provided value is a readonly array.
  *
  * @remarks
