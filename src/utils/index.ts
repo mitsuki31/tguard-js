@@ -8,7 +8,10 @@
 /**
  * Determines whether the provided value has an own property.
  *
- * @typeParam K - The type of the property key.
+ * @remarks
+ * This function is an alias for `Object.prototype.hasOwnProperty` but more robust.
+ *
+ * @typeParam K - The property key type expected to exist on the object.
  * @param obj - The object to be used to check for an own property.
  * @param key - The property key to be checked.
  *
@@ -32,6 +35,119 @@ export function hasOwn<K extends PropertyKey>(
     typeof obj === 'object' &&
     Object.prototype.hasOwnProperty.call(obj, key)
   );
+}
+
+/**
+ * Determines whether the provided value is an object containing all
+ * specified own property keys.
+ *
+ * @remarks
+ * This function checks whether every key in the provided `keys` list
+ * exists as an own property on the target object.
+ *
+ * It does **not** require the object to have exactly the same keys;
+ * additional properties are allowed.
+ *
+ * By default, only enumerable string keys are checked.
+ * When `includeHidden` is enabled, all own property keys are included,
+ * including non-enumerable and symbol keys.
+ *
+ * ### Array Behavior
+ *
+ * Arrays are treated as objects and are therefore supported.
+ *
+ * When validating arrays:
+ *
+ * - `Object.keys()` returns enumerable index keys (`'0'`, `'1'`, ...)
+ * - `Reflect.ownKeys()` additionally includes non-enumerable own keys
+ *   such as `'length'`
+ *
+ * This means enabling `includeHidden` may require including `'length'`
+ * in the expected key list for arrays. See example code below:
+ *
+ * ```javascript
+ * hasKeys([], ['length']);        // false
+ * hasKeys([], ['length'], true);  // true
+ * ```
+ *
+ * ### Implementation Notes
+ *
+ * - This function checks only own properties.
+ * - Prototype chain properties are ignored.
+ * - This function does not validate property values. Use
+ *   {@linkcode builtins.object.isRecordOf | isRecordOf} for value validation.
+ *
+ * @example
+ * Basic key validation:
+ *
+ * ```javascript
+ * const user = { id: 1, name: 'Alice' };
+ *
+ * hasKeys(user, ['id', 'name']); // true
+ *
+ * // Add new property to user
+ * user.email = 'alice@example.com';
+ * if (hasKeys(user, ['email'])) {
+ *   // Property `email` can be used here
+ * }
+ * ```
+ *
+ * Missing keys:
+ *
+ * ```typescript
+ * hasKeys(
+ *   { id: 1 },
+ *   ['id', 'name']
+ * ); // false
+ * ```
+ *
+ * Extra keys are allowed:
+ *
+ * ```typescript
+ * hasKeys(
+ *   { id: 1, name: 'Alice', active: true },
+ *   ['id']
+ * ); // true
+ * ```
+ *
+ * Symbol keys:
+ *
+ * ```typescript
+ * const key = Symbol('token');
+ *
+ * hasKeys(
+ *   { [key]: 'abc' },
+ *   [key],
+ *   true
+ * ); // true
+ * ```
+ *
+ * @typeParam K - The property key type expected to exist on the object.
+ *
+ * @param o - The value to validate.
+ * @param keys - Required own property keys.
+ * @param includeHidden - Whether to include non-enumerable and symbol keys.
+ *
+ * @returns `true` if all specified keys exist on the object.
+ *
+ * @since 1.1.0
+ */
+export function hasKeys<K extends PropertyKey>(
+  o: unknown,
+  keys: readonly K[],
+  includeHidden?: boolean
+): o is Record<K, unknown> {
+  if (o === null || typeof o !== 'object') return false;
+
+  const objectKeys = new Set(
+    (includeHidden ? Reflect.ownKeys(o) : Object.keys(o)) as K[]
+  );
+
+  for (const key of keys) {
+    if (!objectKeys.has(key)) return false;
+  }
+
+  return true;
 }
 
 /**
