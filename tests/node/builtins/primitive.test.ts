@@ -15,6 +15,11 @@ import {
   isNullish,
   isNonNullish,
   isDefined,
+  isASCIIString,
+  isPrintableASCIIString,
+  isInteger,
+  isSafeInteger,
+  isFloat,
 } from '../../../src/builtins/primitive';
 
 describe('builtins/primitive', () => {
@@ -443,6 +448,146 @@ describe('builtins/primitive', () => {
 
     test('should return false for undefined', () => {
       expect(isDefined(undefined)).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isASCIIString
+
+  describe('isASCIIString', () => {
+    test('should return true for ASCII strings including control characters', () => {
+      expect(isASCIIString('hello')).toBe(true);
+      expect(isASCIIString('')).toBe(true);
+      expect(isASCIIString('hello\n')).toBe(true);
+      expect(isASCIIString('\0')).toBe(true);
+      expect(isASCIIString('A\tB')).toBe(true);
+    });
+
+    test('should return false for non-ASCII strings', () => {
+      expect(isASCIIString('こんにちは')).toBe(false);
+      expect(isASCIIString('café')).toBe(false);
+      expect(isASCIIString('✓')).toBe(false);
+    });
+
+    test('should return false for non-strings', () => {
+      expect(isASCIIString(123)).toBe(false);
+      expect(isASCIIString(null)).toBe(false);
+      expect(isASCIIString(undefined)).toBe(false);
+      expect(isASCIIString([])).toBe(false);
+      expect(isASCIIString({})).toBe(false);
+      expect(isASCIIString(() => {})).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isPrintableASCIIString
+
+  describe('isPrintableASCIIString', () => {
+    test('should return true for printable ASCII strings', () => {
+      expect(isPrintableASCIIString('hello')).toBe(true);
+      expect(isPrintableASCIIString('Hello 123!')).toBe(true);
+      expect(isPrintableASCIIString('')).toBe(true);
+      expect(isPrintableASCIIString('~')).toBe(true);
+      expect(isPrintableASCIIString(' ')).toBe(true);
+    });
+
+    test('should return false for control/non-printable ASCII', () => {
+      expect(isPrintableASCIIString('hello\n')).toBe(false);
+      expect(isPrintableASCIIString('\ttext')).toBe(false);
+      expect(isPrintableASCIIString('\0')).toBe(false);
+    });
+
+    test('should return false for non-ASCII strings', () => {
+      expect(isPrintableASCIIString('こんにちは')).toBe(false);
+      expect(isPrintableASCIIString('café')).toBe(false);
+      expect(isPrintableASCIIString('✓')).toBe(false);
+    });
+
+    test('should return false for non-strings', () => {
+      expect(isPrintableASCIIString(123)).toBe(false);
+      expect(isPrintableASCIIString(null)).toBe(false);
+      expect(isPrintableASCIIString(undefined)).toBe(false);
+      expect(isPrintableASCIIString([])).toBe(false);
+      expect(isPrintableASCIIString({})).toBe(false);
+      expect(isPrintableASCIIString(() => {})).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isInteger
+
+  describe('isInteger', () => {
+    test('should return true for integers', () => {
+      expect(isInteger(42)).toBe(true);
+      expect(isInteger(-10)).toBe(true);
+      expect(isInteger(0)).toBe(true);
+      expect(isInteger(1e3)).toBe(true);
+      expect(isInteger(Number.NaN)).toBe(false);
+    });
+
+    test('should return false for non-integers', () => {
+      expect(isInteger(3.14)).toBe(false);
+      expect(isInteger(-0.5)).toBe(false);
+      expect(isInteger(Infinity)).toBe(false);
+      expect(isInteger(-Infinity)).toBe(false);
+      expect(isInteger('42')).toBe(false);
+      expect(isInteger(1n)).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isSafeInteger
+
+  describe('isSafeInteger', () => {
+    test('should return true for safe integers', () => {
+      expect(isSafeInteger(0)).toBe(true);
+      expect(isSafeInteger(1)).toBe(true);
+      expect(isSafeInteger(Number.MAX_SAFE_INTEGER)).toBe(true);
+      expect(isSafeInteger(Number.MIN_SAFE_INTEGER)).toBe(true);
+    });
+
+    test('should return false for unsafe integers', () => {
+      expect(isSafeInteger(Number.MAX_SAFE_INTEGER + 1)).toBe(false);
+      expect(isSafeInteger(Number.MIN_SAFE_INTEGER - 1)).toBe(false);
+    });
+
+    test('should return false for non-integers', () => {
+      expect(isSafeInteger(1.5)).toBe(false);
+      expect(isSafeInteger(NaN)).toBe(false);
+      expect(isSafeInteger(Infinity)).toBe(false);
+      expect(isSafeInteger(-Infinity)).toBe(false);
+      expect(isSafeInteger(1n)).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isFloat
+
+  describe('isFloat', () => {
+    test('should return true for finite non-integer numbers', () => {
+      expect(isFloat(3.14)).toBe(true);
+      expect(isFloat(-0.5)).toBe(true);
+      expect(isFloat(1.5)).toBe(true);
+    });
+
+    test('should return false for integers and non-finite numbers', () => {
+      expect(isFloat(42)).toBe(false);
+      expect(isFloat(0)).toBe(false);
+      expect(isFloat(1e3)).toBe(false);
+      expect(isFloat(NaN)).toBe(false);
+      expect(isFloat(Infinity)).toBe(false);
+      expect(isFloat(-Infinity)).toBe(false);
+    });
+
+    test('should return false for non-numbers (including bigints)', () => {
+      expect(isFloat('1.5')).toBe(false);
+      expect(isFloat(1n)).toBe(false);
+      expect(isFloat(true)).toBe(false);
+      expect(isFloat(null)).toBe(false);
+      expect(isFloat(undefined)).toBe(false);
+      expect(isFloat([])).toBe(false);
+      expect(isFloat({})).toBe(false);
+      expect(isFloat(() => {})).toBe(false);
     });
   });
 
