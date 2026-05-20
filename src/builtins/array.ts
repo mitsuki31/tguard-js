@@ -200,6 +200,10 @@ export function isTuple(
  * isArrayOf<string>(x, isString);
  * ```
  *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
+ *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of strings, otherwise `false`.
  *
@@ -220,6 +224,10 @@ export function isStringArray(x: unknown): x is string[] {
  * ```typescript
  * isArrayOf<number>(x, isNumber);
  * ```
+ *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
  *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of numbers, otherwise `false`.
@@ -242,6 +250,10 @@ export function isNumberArray(x: unknown): x is number[] {
  * isArrayOf<boolean>(x, isBoolean);
  * ```
  *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
+ *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of booleans, otherwise `false`.
  *
@@ -262,6 +274,10 @@ export function isBooleanArray(x: unknown): x is boolean[] {
  * ```typescript
  * isArrayOf<bigint>(x, isBigInt);
  * ```
+ *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
  *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of `bigint`s, otherwise `false`.
@@ -284,6 +300,10 @@ export function isBigIntArray(x: unknown): x is bigint[] {
  * isArrayOf<symbol>(x, isSymbol);
  * ```
  *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
+ *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of symbols, otherwise `false`.
  *
@@ -304,6 +324,10 @@ export function isSymbolArray(x: unknown): x is symbol[] {
  * ```typescript
  * isArrayOf<(...args: any[]) => unknown>(x, isFunction);
  * ```
+ *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
  *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of functions, otherwise `false`.
@@ -333,6 +357,10 @@ export function isFunctionArray(
  * isArrayOf<object>(x, isObject);
  * ```
  *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
+ *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of objects, otherwise `false`.
  *
@@ -353,6 +381,10 @@ export function isObjectArray(x: unknown): x is object[] {
  * ```typescript
  * isArrayOf<Record<PropertyKey, unknown>>(x, isPlainObject);
  * ```
+ *
+ * ...but rejects empty arrays.
+ *
+ * Use {@linkcode isArrayOf} if empty arrays should be considered valid.
  *
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of plain objects, otherwise `false`.
