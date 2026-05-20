@@ -6,7 +6,9 @@ import {
   isSealed,
   isExtensible,
   isFrozen,
+  isRecordOf,
 } from '../../../src/builtins/object';
+import { isNumber } from '../../../src/builtins/primitive';
 
 describe('builtins/object', () => {
   //#region isObject
@@ -380,6 +382,83 @@ describe('builtins/object', () => {
 
     test('should return false for functions', () => {
       expect(isFrozen(() => {})).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isRecordOf
+
+  describe('isRecordOf', () => {
+    const isNumberValue = (_k: string, v: unknown) => isNumber(v);
+
+    test('should return false for non-record inputs', () => {
+      expect(isRecordOf(null, isNumberValue)).toBe(false);
+      expect(isRecordOf(undefined, isNumberValue)).toBe(false);
+      expect(isRecordOf(123, isNumberValue)).toBe(false);
+      expect(isRecordOf('text', isNumberValue)).toBe(false);
+      expect(isRecordOf(true, isNumberValue)).toBe(false);
+
+      expect(isRecordOf([], isNumberValue)).toBe(false);
+      expect(isRecordOf([1, 2, 3], isNumberValue)).toBe(false);
+
+      class A {}
+      expect(isRecordOf(new A(), isNumberValue)).toBe(false);
+      expect(isRecordOf(new Date(), isNumberValue)).toBe(false);
+      expect(isRecordOf(new Map(), isNumberValue)).toBe(false);
+      expect(isRecordOf(new Set(), isNumberValue)).toBe(false);
+      expect(isRecordOf(() => ({}), isNumberValue)).toBe(false);
+    });
+
+    test('should return true for empty plain object', () => {
+      expect(isRecordOf({}, isNumberValue)).toBe(true);
+      expect(isRecordOf({}, isNumberValue, true)).toBe(true);
+    });
+
+    test('should validate enumerable string keys by default', () => {
+      expect(isRecordOf({ a: 1, b: 2 }, isNumberValue)).toBe(true);
+      expect(isRecordOf({ a: 1, b: 'x' }, isNumberValue)).toBe(false);
+    });
+
+    test('should include non-enumerable and symbol keys only when includeHidden is true', () => {
+      const sym = Symbol('s');
+      const obj = { a: 1 };
+      Object.defineProperties(obj, {
+        [sym]: {
+          value: 'not-a-number',
+        },
+        hidden: {
+          value: 'not-a-number',
+          enumerable: false,
+        },
+      });
+
+      expect(obj).toHaveProperty([sym]);
+      expect(obj).toHaveProperty('hidden');
+
+      // includeHidden default/false -> only enumerable string keys are checked
+      expect(isRecordOf(obj, isNumberValue)).toBe(true);
+      expect(isRecordOf(obj, isNumberValue, false)).toBe(true);
+
+      // includeHidden true -> non-enumerable string key + symbol key are included
+      expect(isRecordOf(obj, isNumberValue, true)).toBe(false);
+    });
+
+    test('should call predicate with the correct (key, value) pairs', () => {
+      const calls: [PropertyKey, unknown][] = [];
+
+      const predicate = (k: string, v: unknown): v is number => {
+        calls.push([k, v]);
+        return k === 'a' && isNumber(v);
+      };
+
+      expect(isRecordOf({ a: 1 }, predicate)).toBe(true);
+
+      // Ensure predicate saw correct mapping
+      expect(calls.length).toBe(1);
+      expect(calls[0]).toStrictEqual(['a', 1]);
+
+      // Wrong value for key 'a' should fail
+      expect(isRecordOf({ a: 'nope' }, predicate)).toBe(false);
     });
   });
 
