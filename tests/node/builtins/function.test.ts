@@ -1,52 +1,54 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import {
-  isFunction,
-  isClass,
   isCallable,
+  isClass,
+  isFunction,
 } from '../../../src/builtins/function';
 
 describe('builtins/function', () => {
-  //#region isFunction
+  //#region isCallable
 
-  describe('isFunction', () => {
-    test('should return true for function declarations', () => {
+  describe('isCallable', () => {
+    test('should return true for regular function declarations', () => {
       function myFunc() {}
-      expect(isFunction(myFunc)).toBe(true);
+      expect(isCallable(myFunc)).toBe(true);
     });
 
     test('should return true for arrow functions', () => {
       const arrowFunc = () => {};
-      expect(isFunction(arrowFunc)).toBe(true);
+      expect(isCallable(arrowFunc)).toBe(true);
     });
 
     test('should return true for function expressions', () => {
       const funcExpr = function () {};
-      expect(isFunction(funcExpr)).toBe(true);
-    });
-
-    test('should return true for classes', () => {
-      class MyClass {}
-      expect(isFunction(MyClass)).toBe(true);
-    });
-
-    test('should return true for native functions', () => {
-      expect(isFunction(Array.isArray)).toBe(true);
-      expect(isFunction(Object.keys)).toBe(true);
-      expect(isFunction(String.prototype.toUpperCase)).toBe(true);
+      expect(isCallable(funcExpr)).toBe(true);
     });
 
     test('should return true for bound functions', () => {
       function myFunc() {}
-      expect(isFunction(myFunc.bind({}))).toBe(true);
+      expect(isCallable(myFunc.bind({}))).toBe(true);
+    });
+
+    test('should return false for ES6 classes', () => {
+      class MyClass {}
+      expect(isCallable(MyClass)).toBe(false);
+    });
+
+    test('should return false for classes with extends', () => {
+      class Parent {}
+      class Child extends Parent {}
+      expect(isCallable(Child)).toBe(false);
     });
 
     test('should return false for non-functions', () => {
-      expect(isFunction({})).toBe(false);
-      expect(isFunction([])).toBe(false);
-      expect(isFunction('function')).toBe(false);
-      expect(isFunction(123)).toBe(false);
-      expect(isFunction(null)).toBe(false);
-      expect(isFunction(undefined)).toBe(false);
-      expect(isFunction(true)).toBe(false);
+      expect(isCallable({})).toBe(false);
+      expect(isCallable([])).toBe(false);
+      expect(isCallable('function')).toBe(false);
+      expect(isCallable(123)).toBe(false);
+      expect(isCallable(null)).toBe(false);
+      expect(isCallable(undefined)).toBe(false);
     });
   });
 
@@ -96,47 +98,48 @@ describe('builtins/function', () => {
   });
 
   //#endregion
-  //#region isCallable
+  //#region isFunction
 
-  describe('isCallable', () => {
-    test('should return true for regular function declarations', () => {
+  describe('isFunction', () => {
+    test('should return true for function declarations', () => {
       function myFunc() {}
-      expect(isCallable(myFunc)).toBe(true);
+      expect(isFunction(myFunc)).toBe(true);
     });
 
     test('should return true for arrow functions', () => {
       const arrowFunc = () => {};
-      expect(isCallable(arrowFunc)).toBe(true);
+      expect(isFunction(arrowFunc)).toBe(true);
     });
 
     test('should return true for function expressions', () => {
       const funcExpr = function () {};
-      expect(isCallable(funcExpr)).toBe(true);
+      expect(isFunction(funcExpr)).toBe(true);
+    });
+
+    test('should return true for classes', () => {
+      class MyClass {}
+      expect(isFunction(MyClass)).toBe(true);
+    });
+
+    test('should return true for native functions', () => {
+      expect(isFunction(Array.isArray)).toBe(true);
+      expect(isFunction(Object.keys)).toBe(true);
+      expect(isFunction(String.prototype.toUpperCase)).toBe(true);
     });
 
     test('should return true for bound functions', () => {
       function myFunc() {}
-      expect(isCallable(myFunc.bind({}))).toBe(true);
-    });
-
-    test('should return false for ES6 classes', () => {
-      class MyClass {}
-      expect(isCallable(MyClass)).toBe(false);
-    });
-
-    test('should return false for classes with extends', () => {
-      class Parent {}
-      class Child extends Parent {}
-      expect(isCallable(Child)).toBe(false);
+      expect(isFunction(myFunc.bind({}))).toBe(true);
     });
 
     test('should return false for non-functions', () => {
-      expect(isCallable({})).toBe(false);
-      expect(isCallable([])).toBe(false);
-      expect(isCallable('function')).toBe(false);
-      expect(isCallable(123)).toBe(false);
-      expect(isCallable(null)).toBe(false);
-      expect(isCallable(undefined)).toBe(false);
+      expect(isFunction({})).toBe(false);
+      expect(isFunction([])).toBe(false);
+      expect(isFunction('function')).toBe(false);
+      expect(isFunction(123)).toBe(false);
+      expect(isFunction(null)).toBe(false);
+      expect(isFunction(undefined)).toBe(false);
+      expect(isFunction(true)).toBe(false);
     });
   });
 

@@ -1,3 +1,6 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import { getType, hasKeys, hasOwn, hasShape, typeOf } from '../../src/utils';
 import { isString, isNumber, isUndefined } from '../../src/builtins/primitive';
 
@@ -145,77 +148,6 @@ describe('typeguard/utils', () => {
     },
   ];
 
-  //#region hasOwn
-
-  describe('hasOwn', () => {
-    test('should return true when object has own property', () => {
-      const obj = { a: 1, b: 2 };
-      expect(hasOwn(obj, 'a')).toBe(true);
-      expect(hasOwn(obj, 'b')).toBe(true);
-    });
-
-    test('should return false when object does not have own property', () => {
-      const obj = { a: 1 };
-      expect(hasOwn(obj, 'b')).toBe(false);
-      expect(hasOwn(obj, 'c')).toBe(false);
-    });
-
-    test('should return false for inherited properties', () => {
-      const parent = { a: 1 };
-      const child = Object.create(parent);
-      expect(hasOwn(child, 'a')).toBe(false);
-    });
-
-    test('should return true for properties on Object.create(null)', () => {
-      const obj = Object.create(null);
-      (obj as any).a = 1;
-      expect(hasOwn(obj, 'a')).toBe(true);
-    });
-
-    test('should return false for null', () => {
-      expect(hasOwn(null, 'a')).toBe(false);
-    });
-
-    test('should return false for undefined', () => {
-      expect(hasOwn(undefined, 'a')).toBe(false);
-    });
-
-    test('should return false for primitives', () => {
-      expect(hasOwn('string', 'a')).toBe(false);
-      expect(hasOwn(123, 'a')).toBe(false);
-      expect(hasOwn(true, 'a')).toBe(false);
-    });
-
-    test('should work with symbol keys', () => {
-      const sym = Symbol('test');
-      const obj = { [sym]: 'value' } as any;
-      expect(hasOwn(obj, sym)).toBe(true);
-    });
-
-    test('should work with numeric string keys', () => {
-      const obj = { '0': 'value' };
-      expect(hasOwn(obj, '0')).toBe(true);
-    });
-
-    test('should return true for non-enumerable properties', () => {
-      const obj = {};
-      Object.defineProperty(obj, 'hidden', {
-        value: 1,
-        enumerable: false,
-      });
-      expect(hasOwn(obj, 'hidden')).toBe(true);
-    });
-
-    test('should work with arrays', () => {
-      const arr = [1, 2, 3];
-      expect(hasOwn(arr, '0')).toBe(true);
-      expect(hasOwn(arr, '1')).toBe(true);
-      expect(hasOwn(arr, '3')).toBe(false);
-      expect(hasOwn(arr, 'length')).toBe(true);
-    });
-  });
-
-  //#endregion
   //#region getType
 
   describe('getType', () => {
@@ -242,24 +174,6 @@ describe('typeguard/utils', () => {
       const instance = new MyClass();
       expect(getType(instance)).toContain('Object');
       expect(getType(instance, true)).toContain('Object');
-    });
-  });
-
-  //#endregion
-  //#region typeOf
-
-  describe('typeOf', () => {
-    test('should return the type of the provided value as a string', () => {
-      types.forEach((type) => {
-        expect(typeOf(type.value)).toBe(type.expected.default);
-      });
-    });
-
-    test('should be equivalent to getType with nameOnly false', () => {
-      const values = [null, undefined, 'test', 123, true, [], {}, new Date()];
-      values.forEach((val) => {
-        expect(typeOf(val)).toBe(getType(val, false));
-      });
     });
   });
 
@@ -363,6 +277,77 @@ describe('typeguard/utils', () => {
     test('should expose array length only with includeHidden enabled', () => {
       expect(hasKeys([], ['length'], true)).toBe(true);
       expect(hasKeys([], ['length'])).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region hasOwn
+
+  describe('hasOwn', () => {
+    test('should return true when object has own property', () => {
+      const obj = { a: 1, b: 2 };
+      expect(hasOwn(obj, 'a')).toBe(true);
+      expect(hasOwn(obj, 'b')).toBe(true);
+    });
+
+    test('should return false when object does not have own property', () => {
+      const obj = { a: 1 };
+      expect(hasOwn(obj, 'b')).toBe(false);
+      expect(hasOwn(obj, 'c')).toBe(false);
+    });
+
+    test('should return false for inherited properties', () => {
+      const parent = { a: 1 };
+      const child = Object.create(parent);
+      expect(hasOwn(child, 'a')).toBe(false);
+    });
+
+    test('should return true for properties on Object.create(null)', () => {
+      const obj = Object.create(null);
+      (obj as any).a = 1;
+      expect(hasOwn(obj, 'a')).toBe(true);
+    });
+
+    test('should return false for null', () => {
+      expect(hasOwn(null, 'a')).toBe(false);
+    });
+
+    test('should return false for undefined', () => {
+      expect(hasOwn(undefined, 'a')).toBe(false);
+    });
+
+    test('should return false for primitives', () => {
+      expect(hasOwn('string', 'a')).toBe(false);
+      expect(hasOwn(123, 'a')).toBe(false);
+      expect(hasOwn(true, 'a')).toBe(false);
+    });
+
+    test('should work with symbol keys', () => {
+      const sym = Symbol('test');
+      const obj = { [sym]: 'value' } as any;
+      expect(hasOwn(obj, sym)).toBe(true);
+    });
+
+    test('should work with numeric string keys', () => {
+      const obj = { '0': 'value' };
+      expect(hasOwn(obj, '0')).toBe(true);
+    });
+
+    test('should return true for non-enumerable properties', () => {
+      const obj = {};
+      Object.defineProperty(obj, 'hidden', {
+        value: 1,
+        enumerable: false,
+      });
+      expect(hasOwn(obj, 'hidden')).toBe(true);
+    });
+
+    test('should work with arrays', () => {
+      const arr = [1, 2, 3];
+      expect(hasOwn(arr, '0')).toBe(true);
+      expect(hasOwn(arr, '1')).toBe(true);
+      expect(hasOwn(arr, '3')).toBe(false);
+      expect(hasOwn(arr, 'length')).toBe(true);
     });
   });
 
@@ -526,6 +511,24 @@ describe('typeguard/utils', () => {
       const arr = [,];
 
       expect(hasShape(arr, { 0: isUndefined })).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region typeOf
+
+  describe('typeOf', () => {
+    test('should return the type of the provided value as a string', () => {
+      types.forEach((type) => {
+        expect(typeOf(type.value)).toBe(type.expected.default);
+      });
+    });
+
+    test('should be equivalent to getType with nameOnly false', () => {
+      const values = [null, undefined, 'test', 123, true, [], {}, new Date()];
+      values.forEach((val) => {
+        expect(typeOf(val)).toBe(getType(val, false));
+      });
     });
   });
 

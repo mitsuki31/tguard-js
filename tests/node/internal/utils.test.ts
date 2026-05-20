@@ -1,3 +1,6 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import { attachCause } from '../../../src/internal/utils';
 
 describe('internal/utils', () => {

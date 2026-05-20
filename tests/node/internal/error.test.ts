@@ -1,3 +1,6 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import { createError } from '../../../src/internal/error';
 
 type FutureError<C = unknown> = Error & { cause: C };

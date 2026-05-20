@@ -1,3 +1,6 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import {
   is2DArray,
   isArray,
@@ -17,7 +20,7 @@ import {
   isTuple,
   isUniqueArray,
 } from '../../../src/builtins/array';
-import { isNumber, isString, isBoolean } from '../../../src/builtins/primitive';
+import { isBoolean, isNumber, isString } from '../../../src/builtins/primitive';
 
 describe('builtins/array', () => {
   //#region is2DArray
@@ -120,90 +123,6 @@ describe('builtins/array', () => {
   });
 
   //#endregion
-  //#region isStringArray
-
-  describe('isStringArray', () => {
-    test('should return true for arrays of strings', () => {
-      expect(isStringArray(['a', 'b', 'c'])).toBe(true);
-      expect(isStringArray(['hello', 'world'])).toBe(true);
-      expect(isStringArray([''])).toBe(true);
-    });
-
-    test('should return false for empty arrays', () => {
-      expect(isStringArray([])).toBe(false);
-    });
-
-    test('should return false for arrays with non-string elements', () => {
-      expect(isStringArray(['a', 1, 'c'])).toBe(false);
-      expect(isStringArray([1, 2, 3])).toBe(false);
-      expect(isStringArray(['a', null, 'c'])).toBe(false);
-    });
-
-    test('should return false for non-arrays', () => {
-      expect(isStringArray('text')).toBe(false);
-      expect(isStringArray({})).toBe(false);
-      expect(isStringArray(null)).toBe(false);
-    });
-  });
-
-  //#endregion
-  //#region isNumberArray
-
-  describe('isNumberArray', () => {
-    test('should return true for arrays of numbers', () => {
-      expect(isNumberArray([1, 2, 3])).toBe(true);
-      expect(isNumberArray([0, -1, 1.5])).toBe(true);
-      expect(isNumberArray([NaN, Infinity, -Infinity])).toBe(true);
-    });
-
-    test('should return false for empty arrays', () => {
-      expect(isNumberArray([])).toBe(false);
-    });
-
-    test('should return false for arrays with non-number elements', () => {
-      expect(isNumberArray([1, '2', 3])).toBe(false);
-      expect(isNumberArray(['a', 'b', 'c'])).toBe(false);
-      expect(isNumberArray([1, null, 3])).toBe(false);
-    });
-
-    test('should return false for arrays containing bigints', () => {
-      expect(isNumberArray([1, 2n, 3])).toBe(false);
-    });
-
-    test('should return false for non-arrays', () => {
-      expect(isNumberArray('123')).toBe(false);
-      expect(isNumberArray({})).toBe(false);
-      expect(isNumberArray(null)).toBe(false);
-    });
-  });
-
-  //#endregion
-  //#region isBooleanArray
-
-  describe('isBooleanArray', () => {
-    test('should return true for arrays of booleans', () => {
-      expect(isBooleanArray([true, false])).toBe(true);
-      expect(isBooleanArray([true, true, false])).toBe(true);
-    });
-
-    test('should return false for empty arrays', () => {
-      expect(isBooleanArray([])).toBe(false);
-    });
-
-    test('should return false for arrays with non-boolean elements', () => {
-      expect(isBooleanArray([true, 1, false])).toBe(false);
-      expect(isBooleanArray([true, 'true', false])).toBe(false);
-      expect(isBooleanArray([true, null, false])).toBe(false);
-    });
-
-    test('should return false for non-arrays', () => {
-      expect(isBooleanArray('true')).toBe(false);
-      expect(isBooleanArray({})).toBe(false);
-      expect(isBooleanArray(null)).toBe(false);
-    });
-  });
-
-  //#endregion
   //#region isBigIntArray
 
   describe('isBigIntArray', () => {
@@ -230,6 +149,32 @@ describe('builtins/array', () => {
       expect(isBigIntArray('123')).toBe(false);
       expect(isBigIntArray({})).toBe(false);
       expect(isBigIntArray(null)).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isBooleanArray
+
+  describe('isBooleanArray', () => {
+    test('should return true for arrays of booleans', () => {
+      expect(isBooleanArray([true, false])).toBe(true);
+      expect(isBooleanArray([true, true, false])).toBe(true);
+    });
+
+    test('should return false for empty arrays', () => {
+      expect(isBooleanArray([])).toBe(false);
+    });
+
+    test('should return false for arrays with non-boolean elements', () => {
+      expect(isBooleanArray([true, 1, false])).toBe(false);
+      expect(isBooleanArray([true, 'true', false])).toBe(false);
+      expect(isBooleanArray([true, null, false])).toBe(false);
+    });
+
+    test('should return false for non-arrays', () => {
+      expect(isBooleanArray('true')).toBe(false);
+      expect(isBooleanArray({})).toBe(false);
+      expect(isBooleanArray(null)).toBe(false);
     });
   });
 
@@ -266,28 +211,33 @@ describe('builtins/array', () => {
   });
 
   //#endregion
-  //#region isSymbolArray
+  //#region isEmptyArray
 
-  describe('isSymbolArray', () => {
-    test('should return true for arrays of symbols', () => {
-      expect(isSymbolArray([Symbol('a'), Symbol('b')])).toBe(true);
-      expect(isSymbolArray([Symbol.iterator, Symbol.hasInstance])).toBe(true);
+  describe('isEmptyArray', () => {
+    test('should return true for empty arrays', () => {
+      expect(isEmptyArray([])).toBe(true);
+      expect(isEmptyArray(new Array())).toBe(true);
     });
 
-    test('should return false for empty arrays', () => {
-      expect(isSymbolArray([])).toBe(false);
+    test('should return false for non-empty arrays', () => {
+      expect(isEmptyArray([1])).toBe(false);
+      expect(isEmptyArray([1, 2, 3])).toBe(false);
+      expect(isEmptyArray([''])).toBe(false);
+      expect(isEmptyArray([null])).toBe(false);
+      expect(isEmptyArray([undefined])).toBe(false);
+      expect(isEmptyArray(new Array(10))).toBe(false);
     });
 
-    test('should return false for arrays with non-symbol elements', () => {
-      expect(isSymbolArray([Symbol('a'), 'b', Symbol('c')])).toBe(false);
-      expect(isSymbolArray([Symbol('a'), 1, Symbol('c')])).toBe(false);
-      expect(isSymbolArray([Symbol('a'), null, Symbol('c')])).toBe(false);
+    test('should return false for arrays with holes', () => {
+      // Note: [,] creates an array with one hole, length is 1
+      expect(isEmptyArray([,])).toBe(false);
     });
 
     test('should return false for non-arrays', () => {
-      expect(isSymbolArray('symbol')).toBe(false);
-      expect(isSymbolArray({})).toBe(false);
-      expect(isSymbolArray(null)).toBe(false);
+      expect(isEmptyArray({})).toBe(false);
+      expect(isEmptyArray('')).toBe(false);
+      expect(isEmptyArray(null)).toBe(false);
+      expect(isEmptyArray(undefined)).toBe(false);
     });
   });
 
@@ -389,6 +339,37 @@ describe('builtins/array', () => {
   });
 
   //#endregion
+  //#region isNumberArray
+
+  describe('isNumberArray', () => {
+    test('should return true for arrays of numbers', () => {
+      expect(isNumberArray([1, 2, 3])).toBe(true);
+      expect(isNumberArray([0, -1, 1.5])).toBe(true);
+      expect(isNumberArray([NaN, Infinity, -Infinity])).toBe(true);
+    });
+
+    test('should return false for empty arrays', () => {
+      expect(isNumberArray([])).toBe(false);
+    });
+
+    test('should return false for arrays with non-number elements', () => {
+      expect(isNumberArray([1, '2', 3])).toBe(false);
+      expect(isNumberArray(['a', 'b', 'c'])).toBe(false);
+      expect(isNumberArray([1, null, 3])).toBe(false);
+    });
+
+    test('should return false for arrays containing bigints', () => {
+      expect(isNumberArray([1, 2n, 3])).toBe(false);
+    });
+
+    test('should return false for non-arrays', () => {
+      expect(isNumberArray('123')).toBe(false);
+      expect(isNumberArray({})).toBe(false);
+      expect(isNumberArray(null)).toBe(false);
+    });
+  });
+
+  //#endregion
   //#region isObjectArray
 
   describe('isObjectArray', () => {
@@ -451,37 +432,6 @@ describe('builtins/array', () => {
   });
 
   //#endregion
-  //#region isEmptyArray
-
-  describe('isEmptyArray', () => {
-    test('should return true for empty arrays', () => {
-      expect(isEmptyArray([])).toBe(true);
-      expect(isEmptyArray(new Array())).toBe(true);
-    });
-
-    test('should return false for non-empty arrays', () => {
-      expect(isEmptyArray([1])).toBe(false);
-      expect(isEmptyArray([1, 2, 3])).toBe(false);
-      expect(isEmptyArray([''])).toBe(false);
-      expect(isEmptyArray([null])).toBe(false);
-      expect(isEmptyArray([undefined])).toBe(false);
-      expect(isEmptyArray(new Array(10))).toBe(false);
-    });
-
-    test('should return false for arrays with holes', () => {
-      // Note: [,] creates an array with one hole, length is 1
-      expect(isEmptyArray([,])).toBe(false);
-    });
-
-    test('should return false for non-arrays', () => {
-      expect(isEmptyArray({})).toBe(false);
-      expect(isEmptyArray('')).toBe(false);
-      expect(isEmptyArray(null)).toBe(false);
-      expect(isEmptyArray(undefined)).toBe(false);
-    });
-  });
-
-  //#endregion
   //#region isReadonlyArray
 
   describe('isReadonlyArray', () => {
@@ -523,7 +473,59 @@ describe('builtins/array', () => {
   });
 
   //#endregion
+  //#region isStringArray
 
+  describe('isStringArray', () => {
+    test('should return true for arrays of strings', () => {
+      expect(isStringArray(['a', 'b', 'c'])).toBe(true);
+      expect(isStringArray(['hello', 'world'])).toBe(true);
+      expect(isStringArray([''])).toBe(true);
+    });
+
+    test('should return false for empty arrays', () => {
+      expect(isStringArray([])).toBe(false);
+    });
+
+    test('should return false for arrays with non-string elements', () => {
+      expect(isStringArray(['a', 1, 'c'])).toBe(false);
+      expect(isStringArray([1, 2, 3])).toBe(false);
+      expect(isStringArray(['a', null, 'c'])).toBe(false);
+    });
+
+    test('should return false for non-arrays', () => {
+      expect(isStringArray('text')).toBe(false);
+      expect(isStringArray({})).toBe(false);
+      expect(isStringArray(null)).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region isSymbolArray
+
+  describe('isSymbolArray', () => {
+    test('should return true for arrays of symbols', () => {
+      expect(isSymbolArray([Symbol('a'), Symbol('b')])).toBe(true);
+      expect(isSymbolArray([Symbol.iterator, Symbol.hasInstance])).toBe(true);
+    });
+
+    test('should return false for empty arrays', () => {
+      expect(isSymbolArray([])).toBe(false);
+    });
+
+    test('should return false for arrays with non-symbol elements', () => {
+      expect(isSymbolArray([Symbol('a'), 'b', Symbol('c')])).toBe(false);
+      expect(isSymbolArray([Symbol('a'), 1, Symbol('c')])).toBe(false);
+      expect(isSymbolArray([Symbol('a'), null, Symbol('c')])).toBe(false);
+    });
+
+    test('should return false for non-arrays', () => {
+      expect(isSymbolArray('symbol')).toBe(false);
+      expect(isSymbolArray({})).toBe(false);
+      expect(isSymbolArray(null)).toBe(false);
+    });
+  });
+
+  //#endregion
   //#region isTuple
 
   describe('isTuple', () => {
