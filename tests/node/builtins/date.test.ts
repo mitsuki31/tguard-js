@@ -1,3 +1,6 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import {
   isDate,
   isDateString,
@@ -45,30 +48,30 @@ describe('builtins/date', () => {
   });
 
   //#endregion
-  //#region isValidDate
+  //#region isDateString
 
-  describe('isValidDate', () => {
-    test('should return true for valid Date objects', () => {
-      expect(isValidDate(new Date())).toBe(true);
-      expect(isValidDate(new Date(0))).toBe(true);
-      expect(isValidDate(new Date('2026-04-10'))).toBe(true);
+  describe('isDateString', () => {
+    test('should return true for ISO date strings', () => {
+      expect(isDateString('2026-04-10T12:00:00Z')).toBe(true);
+      expect(isDateString(new Date().toISOString())).toBe(true);
     });
 
-    test('should return false for invalid Date objects', () => {
-      expect(isValidDate(new Date('invalid'))).toBe(false);
-      expect(isValidDate(new Date(NaN))).toBe(false);
+    test('should return true for parseable date strings', () => {
+      expect(isDateString('2026-04-10')).toBe(true);
+      expect(isDateString('April 10, 2026')).toBe(true);
+      expect(isDateString('04/10/2026')).toBe(true);
     });
 
-    test('should return false for timestamps', () => {
-      expect(isValidDate(Date.now())).toBe(false);
-      expect(isValidDate(0)).toBe(false);
+    test('should return false for non-parseable date strings', () => {
+      expect(isDateString('invalid')).toBe(false);
+      expect(isDateString('not a date')).toBe(false);
     });
 
-    test('should return false for non-dates', () => {
-      expect(isValidDate({})).toBe(false);
-      expect(isValidDate('2026-04-10')).toBe(false);
-      expect(isValidDate(null)).toBe(false);
-      expect(isValidDate(undefined)).toBe(false);
+    test('should return false for non-strings', () => {
+      expect(isDateString(123)).toBe(false);
+      expect(isDateString(new Date())).toBe(false);
+      expect(isDateString(null)).toBe(false);
+      expect(isDateString(undefined)).toBe(false);
     });
   });
 
@@ -114,30 +117,30 @@ describe('builtins/date', () => {
   });
 
   //#endregion
-  //#region isDateString
+  //#region isValidDate
 
-  describe('isDateString', () => {
-    test('should return true for ISO date strings', () => {
-      expect(isDateString('2026-04-10T12:00:00Z')).toBe(true);
-      expect(isDateString(new Date().toISOString())).toBe(true);
+  describe('isValidDate', () => {
+    test('should return true for valid Date objects', () => {
+      expect(isValidDate(new Date())).toBe(true);
+      expect(isValidDate(new Date(0))).toBe(true);
+      expect(isValidDate(new Date('2026-04-10'))).toBe(true);
     });
 
-    test('should return true for parseable date strings', () => {
-      expect(isDateString('2026-04-10')).toBe(true);
-      expect(isDateString('April 10, 2026')).toBe(true);
-      expect(isDateString('04/10/2026')).toBe(true);
+    test('should return false for invalid Date objects', () => {
+      expect(isValidDate(new Date('invalid'))).toBe(false);
+      expect(isValidDate(new Date(NaN))).toBe(false);
     });
 
-    test('should return false for non-parseable date strings', () => {
-      expect(isDateString('invalid')).toBe(false);
-      expect(isDateString('not a date')).toBe(false);
+    test('should return false for timestamps', () => {
+      expect(isValidDate(Date.now())).toBe(false);
+      expect(isValidDate(0)).toBe(false);
     });
 
-    test('should return false for non-strings', () => {
-      expect(isDateString(123)).toBe(false);
-      expect(isDateString(new Date())).toBe(false);
-      expect(isDateString(null)).toBe(false);
-      expect(isDateString(undefined)).toBe(false);
+    test('should return false for non-dates', () => {
+      expect(isValidDate({})).toBe(false);
+      expect(isValidDate('2026-04-10')).toBe(false);
+      expect(isValidDate(null)).toBe(false);
+      expect(isValidDate(undefined)).toBe(false);
     });
   });
 

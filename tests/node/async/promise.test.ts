@@ -1,6 +1,51 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import { isPromise, isPromiseLike } from '../../../src/async/promise';
 
 describe('async/promise', () => {
+  //#region isPromise
+
+  describe('isPromise', () => {
+    test('should return true for Promise objects', () => {
+      expect(isPromise(new Promise(() => {}))).toBe(true);
+      expect(isPromise(Promise.resolve())).toBe(true);
+      expect(isPromise(Promise.reject().catch(() => {}))).toBe(true);
+    });
+
+    test('should return true for async function results', () => {
+      const asyncFunc = async () => {};
+      expect(isPromise(asyncFunc())).toBe(true);
+    });
+
+    test('should return false for thenable objects', () => {
+      expect(isPromise({ then: () => {} })).toBe(false);
+      expect(
+        isPromise({
+          then: () => {},
+          catch: () => {},
+        })
+      ).toBe(false);
+    });
+
+    test('should return false for non-promises', () => {
+      expect(isPromise({})).toBe(false);
+      expect(isPromise([])).toBe(false);
+      expect(isPromise('promise')).toBe(false);
+      expect(isPromise(123)).toBe(false);
+      expect(isPromise(true)).toBe(false);
+      expect(isPromise(null)).toBe(false);
+      expect(isPromise(undefined)).toBe(false);
+    });
+
+    test('should return false for functions', () => {
+      expect(isPromise(() => {})).toBe(false);
+      expect(isPromise(function () {})).toBe(false);
+      expect(isPromise(async () => {})).toBe(false);
+    });
+  });
+
+  //#endregion
   //#region isPromiseLike
 
   describe('isPromiseLike', () => {
@@ -46,48 +91,6 @@ describe('async/promise', () => {
     test('should return false for regular functions', () => {
       expect(isPromiseLike(() => {})).toBe(false);
       expect(isPromiseLike(function () {})).toBe(false);
-    });
-  });
-
-  //#endregion
-  //#region isPromise
-
-  describe('isPromise', () => {
-    test('should return true for Promise objects', () => {
-      expect(isPromise(new Promise(() => {}))).toBe(true);
-      expect(isPromise(Promise.resolve())).toBe(true);
-      expect(isPromise(Promise.reject().catch(() => {}))).toBe(true);
-    });
-
-    test('should return true for async function results', () => {
-      const asyncFunc = async () => {};
-      expect(isPromise(asyncFunc())).toBe(true);
-    });
-
-    test('should return false for thenable objects', () => {
-      expect(isPromise({ then: () => {} })).toBe(false);
-      expect(
-        isPromise({
-          then: () => {},
-          catch: () => {},
-        })
-      ).toBe(false);
-    });
-
-    test('should return false for non-promises', () => {
-      expect(isPromise({})).toBe(false);
-      expect(isPromise([])).toBe(false);
-      expect(isPromise('promise')).toBe(false);
-      expect(isPromise(123)).toBe(false);
-      expect(isPromise(true)).toBe(false);
-      expect(isPromise(null)).toBe(false);
-      expect(isPromise(undefined)).toBe(false);
-    });
-
-    test('should return false for functions', () => {
-      expect(isPromise(() => {})).toBe(false);
-      expect(isPromise(function () {})).toBe(false);
-      expect(isPromise(async () => {})).toBe(false);
     });
   });
 

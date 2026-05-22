@@ -1,3 +1,6 @@
+// ! Developer note:
+// ! Keep imports and test cases sorted alphabetically to keep organized and easy to maintain.
+
 import {
   ensureError,
   hasErrorMessage,
@@ -11,6 +14,53 @@ import {
 } from '../../../src/builtins/error';
 
 describe('builtins/error', () => {
+  //#region ensureError
+
+  describe('ensureError', () => {
+    test('should be an alias for normalizeError', () => {
+      const error = new Error('message');
+      expect(ensureError(error)).toMatchObject(error);
+    });
+
+    test('should convert error-like objects to Error', () => {
+      const errorLike = { message: 'custom message' };
+      const result = ensureError(errorLike);
+      expect(result).toBeInstanceOf(Error);
+      expect(result.message).toStrictEqual('custom message');
+    });
+
+    test('should convert strings to Error', () => {
+      const result = ensureError('error message');
+      expect(result).toBeInstanceOf(Error);
+      expect(result.message).toStrictEqual('error message');
+    });
+  });
+
+  //#endregion
+  //#region hasErrorMessage
+
+  describe('hasErrorMessage', () => {
+    test('should return true for Error objects', () => {
+      expect(hasErrorMessage(new Error('msg'))).toBe(true);
+      expect(hasErrorMessage(new TypeError('msg'))).toBe(true);
+    });
+
+    test('should return true for objects with string message property', () => {
+      expect(hasErrorMessage({ message: 'msg' })).toBe(true);
+    });
+
+    test('should return false for objects without string message', () => {
+      expect(hasErrorMessage({})).toBe(false);
+      expect(hasErrorMessage({ message: 123 })).toBe(false);
+    });
+
+    test('should return false for non-objects', () => {
+      expect(hasErrorMessage('error')).toBe(false);
+      expect(hasErrorMessage(null)).toBe(false);
+    });
+  });
+
+  //#endregion
   //#region isError
 
   describe('isError', () => {
@@ -74,24 +124,7 @@ describe('builtins/error', () => {
   });
 
   //#endregion
-  //#region Error Subclasses
-
-  describe('isTypeError', () => {
-    test('should return true for TypeError objects', () => {
-      expect(isTypeError(new TypeError())).toBe(true);
-      expect(isTypeError(new TypeError('message'))).toBe(true);
-    });
-
-    test('should return false for other error types', () => {
-      expect(isTypeError(new Error())).toBe(false);
-      expect(isTypeError(new RangeError())).toBe(false);
-    });
-
-    test('should return false for non-errors', () => {
-      expect(isTypeError({ message: 'error' })).toBe(false);
-      expect(isTypeError('error')).toBe(false);
-    });
-  });
+  //#region isRangeError
 
   describe('isRangeError', () => {
     test('should return true for RangeError objects', () => {
@@ -110,6 +143,9 @@ describe('builtins/error', () => {
     });
   });
 
+  //#endregion
+  //#region isReferenceError
+
   describe('isReferenceError', () => {
     test('should return true for ReferenceError objects', () => {
       expect(isReferenceError(new ReferenceError())).toBe(true);
@@ -126,6 +162,9 @@ describe('builtins/error', () => {
       expect(isReferenceError('error')).toBe(false);
     });
   });
+
+  //#endregion
+  //#region isSyntaxError
 
   describe('isSyntaxError', () => {
     test('should return true for SyntaxError objects', () => {
@@ -145,26 +184,22 @@ describe('builtins/error', () => {
   });
 
   //#endregion
-  //#region hasErrorMessage
+  //#region isTypeError
 
-  describe('hasErrorMessage', () => {
-    test('should return true for Error objects', () => {
-      expect(hasErrorMessage(new Error('msg'))).toBe(true);
-      expect(hasErrorMessage(new TypeError('msg'))).toBe(true);
+  describe('isTypeError', () => {
+    test('should return true for TypeError objects', () => {
+      expect(isTypeError(new TypeError())).toBe(true);
+      expect(isTypeError(new TypeError('message'))).toBe(true);
     });
 
-    test('should return true for objects with string message property', () => {
-      expect(hasErrorMessage({ message: 'msg' })).toBe(true);
+    test('should return false for other error types', () => {
+      expect(isTypeError(new Error())).toBe(false);
+      expect(isTypeError(new RangeError())).toBe(false);
     });
 
-    test('should return false for objects without string message', () => {
-      expect(hasErrorMessage({})).toBe(false);
-      expect(hasErrorMessage({ message: 123 })).toBe(false);
-    });
-
-    test('should return false for non-objects', () => {
-      expect(hasErrorMessage('error')).toBe(false);
-      expect(hasErrorMessage(null)).toBe(false);
+    test('should return false for non-errors', () => {
+      expect(isTypeError({ message: 'error' })).toBe(false);
+      expect(isTypeError('error')).toBe(false);
     });
   });
 
@@ -242,29 +277,6 @@ describe('builtins/error', () => {
       const result = normalizeError(obj);
       expect(result).toBeInstanceOf(Error);
       expect(result.message).toMatch(/unknown error/i);
-    });
-  });
-
-  //#endregion
-  //#region ensureError
-
-  describe('ensureError', () => {
-    test('should be an alias for normalizeError', () => {
-      const error = new Error('message');
-      expect(ensureError(error)).toMatchObject(error);
-    });
-
-    test('should convert error-like objects to Error', () => {
-      const errorLike = { message: 'custom message' };
-      const result = ensureError(errorLike);
-      expect(result).toBeInstanceOf(Error);
-      expect(result.message).toStrictEqual('custom message');
-    });
-
-    test('should convert strings to Error', () => {
-      const result = ensureError('error message');
-      expect(result).toBeInstanceOf(Error);
-      expect(result.message).toStrictEqual('error message');
     });
   });
 

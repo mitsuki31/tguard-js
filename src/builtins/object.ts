@@ -9,6 +9,11 @@
 
 import { getProto } from '../internal/utils';
 
+// --- Re-exports ---
+export { hasKeys, hasShape } from '../utils/index';
+
+type Predicate<K, V> = (key: K, value: unknown) => value is V;
+
 /**
  * Determines whether the provided value is an object (excluding `null`).
  *
@@ -82,7 +87,10 @@ export function isPlainObject(o: unknown): o is Record<PropertyKey, unknown> {
 }
 
 /**
- * Alias for {@linkcode isPlainObject}.
+ * Determines whether the provided value is a plain object.
+ *
+ * @remarks
+ * This function is an alias for {@linkcode isPlainObject}.
  *
  * @param o - The value to be checked.
  * @returns `true` if the value is a plain object, otherwise `false`.
@@ -95,35 +103,150 @@ export function isRecord(o: unknown): o is Record<PropertyKey, unknown> {
 }
 
 /**
+ * Determines whether the provided value is a record whose entries
+ * satisfy the given predicate.
+ *
+ * @remarks
+ * This function validates both the property keys and values of an object
+ * using a custom predicate callback.
+ *
+ * By default, only enumerable string keys are checked using `Object.keys()`.
+ * When `includeHidden` is enabled, all own property keys are inspected
+ * using `Reflect.ownKeys()`, including:
+ *
+ * - non-enumerable properties
+ * - symbol keys
+ *
+ * The predicate receives:
+ *
+ * - the current property key
+ * - the associated property value
+ *
+ * and must return whether the value satisfies the expected type.
+ *
+ * @example
+ * Validate a record of strings:
+ *
+ * ```typescript
+ * isRecordOf(
+ *   { a: 'hello', b: 'world' },
+ *   (_k, v): v is string => isString(v)
+ * ); // true
+ * ```
+ *
+ * Validate key-sensitive values:
+ *
+ * ```typescript
+ * isRecordOf(
+ *   { port: 3000 },
+ *   (k, v): v is number => {
+ *     return k === 'port' && isNumber(v);
+ *   }
+ * );
+ * ```
+ *
+ * Include non-enumerable and symbol keys:
+ *
+ * ```typescript
+ * const obj = Object.defineProperty(
+ *   { [Symbol('id')]: 123 },
+ *   'hidden',
+ *   {
+ *     value: 456,
+ *     enumerable: false,
+ *   }
+ * );
+ *
+ * isRecordOf(obj, (_k, v): v is number => {
+ *   return isNumber(v);
+ * }, true);
+ * ```
+ *
+ * @typeParam K - The union of property keys represented by the record.
+ * @typeParam V - The value type that each property must satisfy.
+ *
+ * @param o - The value to validate.
+ * @param predicate - A predicate used to validate each entry value.
+ * @param includeHidden - Whether to include non-enumerable and symbol keys.
+ *
+ * @returns `true` if all entries satisfy the predicate, otherwise `false`.
+ *
+ * @since 1.1.0
+ * @see   {@link isRecord}
+ */
+export function isRecordOf<K extends PropertyKey, V>(
+  o: unknown,
+  predicate: Predicate<K, V>,
+  includeHidden?: boolean
+): o is Record<K, V> {
+  if (!isRecord(o)) return false;
+
+  const keys = (includeHidden ? Reflect.ownKeys(o) : Object.keys(o)) as K[];
+  for (const key of keys) {
+    const value = (o as Record<PropertyKey, unknown>)[key];
+
+    if (!predicate(key, value)) return false;
+  }
+
+  return true;
+}
+
+/**
  * Determines whether the provided value is an empty plain object.
  *
  * @remarks
  * A value is considered empty if it is a plain object with no own
- * enumerable string-keyed properties.
+ * properties.
  *
- * For checking an empty array, consider use
+ * By default, only enumerable string-keyed properties are checked.
+ * When `includeHidden` is enabled, all own properties are considered,
+ * including non-enumerable and symbol properties.
+ *
+ * For checking an empty array, consider using
  * {@linkcode builtins.array.isEmptyArray | isEmptyArray}.
  *
- * Non-enumerable and symbol properties are not considered.
+ * ### Examples
  *
- * | Value                         | Result |
- * | ----------------------------- | ------ |
- * | `{}`                          | `true` |
- * | `{ a: 1 }`                    | `false`|
- * | `Object.create(null)`         | `true` |
- * | `[]`                          | `false`|
- * | `new Date()`                  | `false`|
- * | `{ [Symbol('a')]: 1 }`        | `true` |
+ * Default behavior:
  *
- * @param o - The value to be checked.
- * @returns `true` if the value is an empty plain object.
+ * | Value                  | Result  |
+ * | ---------------------- | ------- |
+ * | `{}`                   | `true`  |
+ * | `{ a: 1 }`             | `false` |
+ * | `Object.create(null)`  | `true`  |
+ * | `[]`                   | `false` |
+ * | `new Date()`           | `false` |
+ * | `{ [Symbol('a')]: 1 }` | `true`  |
+ *
+ * With `includeHidden` set to `true`:
+ *
+ * | Value                  | Result  |
+ * | ---------------------- | ------- |
+ * | `{}`                   | `true`  |
+ * | `{ [Symbol('a')]: 1 }` | `false` |
+ *
+ * ### Implementation Notes
+ *
+ * - This function only checks own properties.
+ * - Prototype properties are ignored.
+ * - Arrays are not considered plain objects.
+ *
+ * @param o - The value to validate.
+ * @param includeHidden - Whether to include non-enumerable and symbol properties.
+ *
+ * @returns `true` if the value is an empty plain object, `false` otherwise.
  *
  * @since 1.0.0
- * @see   {@link isPlainObject}
+ * @see {@link isPlainObject}
  */
-export function isEmptyObject(o: unknown): boolean {
+export function isEmptyObject(
+  o: unknown,
+  includeHidden?: boolean
+): o is Record<PropertyKey, never> {
   if (!isPlainObject(o)) return false;
-  return Object.keys(o).length === 0;
+
+  const keys = includeHidden ? Reflect.ownKeys(o) : Object.keys(o);
+  return keys.length === 0;
 }
 
 /**
