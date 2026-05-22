@@ -1,4 +1,5 @@
-import { getType, hasOwn, typeOf } from '../../src/utils';
+import { getType, hasKeys, hasOwn, hasShape, typeOf } from '../../src/utils';
+import { isString, isNumber, isUndefined } from '../../src/builtins/primitive';
 
 describe('typeguard/utils', () => {
   const types = [
@@ -259,6 +260,272 @@ describe('typeguard/utils', () => {
       values.forEach((val) => {
         expect(typeOf(val)).toBe(getType(val, false));
       });
+    });
+  });
+
+  //#endregion
+  //#region hasKeys
+
+  describe('hasKeys', () => {
+    test('should return true for object with all required keys', () => {
+      const obj = {
+        name: 'alice',
+        age: 20,
+      };
+
+      expect(hasKeys(obj, ['name', 'age'])).toBe(true);
+    });
+
+    test('should return false if one key is missing', () => {
+      const obj = {
+        name: 'alice',
+      };
+
+      expect(hasKeys(obj, ['name', 'age'])).toBe(false);
+    });
+
+    test('should return true for empty keys array', () => {
+      expect(hasKeys({ a: 1 }, [])).toBe(true);
+    });
+
+    test('should return false for null', () => {
+      expect(hasKeys(null, ['a'])).toBe(false);
+    });
+
+    test('should return false for undefined', () => {
+      expect(hasKeys(undefined, ['a'])).toBe(false);
+    });
+
+    test('should return false for primitive values', () => {
+      expect(hasKeys(123, ['a'])).toBe(false);
+      expect(hasKeys(123n, ['a'])).toBe(false);
+      expect(hasKeys(NaN, ['a'])).toBe(false);
+      expect(hasKeys('hello', ['a'])).toBe(false);
+      expect(hasKeys(true, ['a'])).toBe(false);
+      expect(hasKeys(Symbol('id'), ['a'])).toBe(false);
+      expect(hasKeys(null, ['a'])).toBe(false);
+      expect(hasKeys(undefined, ['a'])).toBe(false);
+    });
+
+    test('should ignore inherited properties', () => {
+      class User {
+        name = 'alice';
+      }
+
+      (User.prototype as any).role = 'admin';
+      const obj = new User();
+
+      expect(hasKeys(obj, ['role'])).toBe(false);
+    });
+
+    test('should support symbol keys with includeHidden enabled', () => {
+      const id = Symbol('id');
+      const obj = {
+        [id]: 123,
+      };
+
+      expect(hasKeys(obj, [id], true)).toBe(true);
+    });
+
+    test('should reject symbol keys when includeHidden is disabled', () => {
+      const id = Symbol('id');
+      const obj = {
+        [id]: 123,
+      };
+
+      expect(hasKeys(obj, [id])).toBe(false);
+    });
+
+    test('should support non-enumerable properties with includeHidden enabled', () => {
+      const obj = {};
+      Object.defineProperty(obj, 'hidden', {
+        value: true,
+        enumerable: false,
+      });
+
+      expect(hasKeys(obj, ['hidden'], true)).toBe(true);
+    });
+
+    test('should reject non-enumerable properties by default', () => {
+      const obj = {};
+      Object.defineProperty(obj, 'hidden', {
+        value: true,
+        enumerable: false,
+      });
+
+      expect(hasKeys(obj, ['hidden'])).toBe(false);
+    });
+
+    test('should support arrays', () => {
+      expect(hasKeys(['a', 'b'], ['0', '1'])).toBe(true);
+    });
+
+    test('should expose array length only with includeHidden enabled', () => {
+      expect(hasKeys([], ['length'], true)).toBe(true);
+      expect(hasKeys([], ['length'])).toBe(false);
+    });
+  });
+
+  //#endregion
+  //#region hasShape
+
+  describe('hasShape', () => {
+    test('should return true for matching object shape', () => {
+      const obj = {
+        name: 'alice',
+        age: 20,
+      };
+
+      expect(
+        hasShape(obj, {
+          name: isString,
+          age: isNumber,
+        })
+      ).toBe(true);
+    });
+
+    test('should return false if property is missing', () => {
+      const obj = {
+        name: 'alice',
+      };
+
+      expect(
+        hasShape(obj, {
+          name: isString,
+          age: isNumber,
+        })
+      ).toBe(false);
+    });
+
+    test('should return false if property validator fails', () => {
+      const obj = {
+        name: 'alice',
+        age: '20',
+      };
+
+      expect(
+        hasShape(obj, {
+          name: isString,
+          age: isNumber,
+        })
+      ).toBe(false);
+    });
+
+    test('should allow additional properties', () => {
+      const obj = {
+        name: 'alice',
+        age: 20,
+        active: true,
+      };
+
+      expect(
+        hasShape(obj, {
+          name: isString,
+        })
+      ).toBe(true);
+    });
+
+    test('should return true for empty shape object', () => {
+      expect(hasShape({ a: 1 }, {})).toBe(true);
+    });
+
+    test('should return false for nullish', () => {
+      expect(
+        hasShape(null, {
+          a: isString,
+        })
+      ).toBe(false);
+      expect(
+        hasShape(undefined, {
+          a: isString,
+        })
+      ).toBe(false);
+    });
+
+    test('should return false for primitive values', () => {
+      expect(
+        hasShape(123, {
+          a: isString,
+        })
+      ).toBe(false);
+
+      expect(
+        hasShape('hello', {
+          a: isString,
+        })
+      ).toBe(false);
+    });
+
+    test('should ignore inherited properties', () => {
+      class User {
+        name = 'alice';
+      }
+
+      (User.prototype as any).role = 'admin';
+      const obj = new User();
+
+      expect(
+        hasShape(obj, {
+          role: isString,
+        })
+      ).toBe(false);
+    });
+
+    test('should support symbol keys with includeHidden enabled', () => {
+      const id = Symbol('id');
+      const obj = {
+        [id]: 123,
+      };
+
+      expect(hasShape(obj, { [id]: isNumber }, true)).toBe(true);
+    });
+
+    test('should reject symbol keys when includeHidden is disabled', () => {
+      const id = Symbol('id');
+      const obj = {
+        [id]: 123,
+      };
+
+      expect(hasShape(obj, { [id]: isNumber })).toBe(false);
+    });
+
+    test('should support non-enumerable properties with includeHidden enabled', () => {
+      const obj = {};
+      Object.defineProperty(obj, 'hidden', {
+        value: 123,
+        enumerable: false,
+      });
+
+      expect(hasShape(obj, { hidden: isNumber }, true)).toBe(true);
+    });
+
+    test('should reject non-enumerable properties by default', () => {
+      const obj = {};
+      Object.defineProperty(obj, 'hidden', {
+        value: 123,
+        enumerable: false,
+      });
+
+      expect(hasShape(obj, { hidden: isNumber })).toBe(false);
+    });
+
+    test('should validate array indices', () => {
+      expect(
+        hasShape(['a', 'b'], {
+          0: isString,
+          1: isString,
+        })
+      ).toBe(true);
+    });
+
+    test('should validate array length with includeHidden enabled', () => {
+      expect(hasShape([], { length: isNumber }, true)).toBe(true);
+    });
+
+    test('should reject sparse arrays when validating missing entries', () => {
+      const arr = [,];
+
+      expect(hasShape(arr, { 0: isUndefined })).toBe(false);
     });
   });
 
