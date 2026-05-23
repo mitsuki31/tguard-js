@@ -32,16 +32,42 @@ if (isArrayOf(data, isStringOrNumber)) {
 
 ## Validating Complex Objects
 
+### Simple Validation
+
 ```typescript
 import { isRecord, isString, isNumber } from 'tguard-js';
 
-function validateConfig(config: unknown) {
+function validateConfig(config: unknown): config is {
+  name: string;
+  port: number;
+  host: string;
+  [key: string]: unknown;  // remove it if want strictness
+} {
   return (
     isRecord(config) &&
     isString(config.name) &&
     isNumber(config.port) &&
     isString(config.host)
   );
+}
+```
+
+### More Flexible & Robust Validation
+
+```typescript
+import { hasShape, isString, isNumber } from 'tguard-js';
+
+function validateConfig(config: unknown): config is {
+  name: string;
+  port: number;
+  host: string;
+  [key: string]: unknown;  // remove it if want strictness
+} {
+  return hasShape(config, {
+    name: isString,
+    port: isNumber,
+    host: isString,
+  });
 }
 ```
 
@@ -64,7 +90,7 @@ try {
 
 ```typescript
 import {
-  isRecord, isString, isNumber,
+  hasShape, isString, isNumber,
   isArray, isArrayOf
 } from 'tguard-js';
 
@@ -75,12 +101,11 @@ interface User {
 }
 
 function isUser(value: any): value is User {
-  return (
-    isRecord(value) &&
-    isNumber(value.id) &&
-    isString(value.name) &&
-    isString(value.email)
-  );
+  return hasShape(value, {
+    id: isNumber,
+    name: isString,
+    email: isString,
+  });
 }
 
 function handleUsers(response: unknown) {
@@ -94,19 +119,19 @@ function handleUsers(response: unknown) {
 ## Validating Environment Configuration
 
 ```typescript
-import { isString, isNumber, isNonNullish } from 'tguard-js';
 import { isEnvDefined } from 'tguard-js';
 
 function validateEnv() {
+  if (!isEnvDefined(process.env.API_URL)) {
+    throw new Error('API_URL environment variable must be set');
+  }
+
   const config = {
+    // API_URL can now be safely consumed
     apiUrl: process.env.API_URL,
     port: parseInt(process.env.PORT || '3000'),
     debug: process.env.DEBUG === 'true',
   };
-
-  if (!isEnvDefined(config.apiUrl)) {
-    throw new Error('API_URL environment variable must be set');
-  }
 
   return config;
 }
