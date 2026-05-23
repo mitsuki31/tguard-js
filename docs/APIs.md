@@ -112,6 +112,32 @@ isPlainObjectArray([{}, {}])        // true
 
 ---
 
+## Two-dimensional Arrays & Matrices
+
+```ts
+import { is2DArray, isMatrix } from 'tguard-js';
+```
+
+```ts
+is2DArray([
+  ['a', 'b', 'foo'],
+  ['bar', 123]
+]); // true
+
+isMatrix([
+  [1, 2, 3],
+  [4, 5, 6]
+]); // true
+
+// Matrix entries should be number
+isMatrix([
+  [1, 2, 3],
+  [4, 'foo', 'bar']
+]); // false
+```
+
+---
+
 ## Function & ES6 Class Type Guards
 
 Distinguishes between callable values and class constructors.
@@ -122,6 +148,8 @@ import { isFunction, isClass, isCallable } from 'tguard-js';
 
 ```ts
 isFunction(() => {})       // true
+isFunction(class {})       // true
+
 isClass(class A {})        // true
 
 isCallable(() => {})       // true
