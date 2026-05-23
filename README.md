@@ -50,11 +50,11 @@ These results are technically correct by specification, but not useful for runti
 ```js
 import * as TG from 'tguard-js';
 
-TG.isNull(null);        // true
-TG.isArray([]);         // true
-TG.isObject(null);      // false
-TG.isRecord({});        // true
-TG.isRecord([]);        // false
+TG.isNull(null);    // true
+TG.isArray([]);     // true
+TG.isObject(null);  // false
+TG.isRecord({});    // true
+TG.isRecord([]);    // false
 
 // Cross-realm safe
 const ForeignError = window.frames[0].Error;
@@ -71,9 +71,13 @@ The library prioritizes **predictability over spec quirks**.
 
 ## Installation
 
+### Bun
+
 ```bash
 bun install tguard-js
 ```
+
+### npm
 
 ```bash
 npm install tguard-js
@@ -84,16 +88,19 @@ npm install tguard-js
 ## Quick Start
 
 ```ts
-import { isString, isArray, isRecord } from 'tguard-js';
+import { isString, isArrayOf, isRecord } from 'tguard-js';
 
+// Basic validation
 if (isString(value)) {
   value.toUpperCase();
 }
 
-if (isArray(data) && isString(data[0])) {
+// Check if all array elements are string
+if (isArrayOf(data, isString)) {
   console.log(data[0]);
 }
 
+// Check if the config has `key` before consuming it
 if (isRecord(config) && isString(config.key)) {
   useConfig(config);
 }
@@ -108,8 +115,12 @@ if (isRecord(config) && isString(config.key)) {
 Functions use `x is T` **only when runtime checks guarantee it**.
 
 ```ts
-isString(x): x is string       // safe
-isArray(x): x is unknown[]     // safe
+isString(x): x is string    // safe
+isArray(x): x is unknown[]  // safe
+isRecord(o): o is Record<PropertyKey, unknown>  // safe
+
+isEmptyArray(x): x is []
+isEmptyObject(o): o is Record<PropertyKey, never>
 ```
 
 ### 2. No false guarantees
@@ -117,6 +128,7 @@ isArray(x): x is unknown[]     // safe
 Generic predicates are only used when validated:
 
 ```ts
+isArrayOf<T>(x, predicate): x is T[]
 isRecordOf<T>(x, predicate): x is Record<string, T>
 ```
 
@@ -150,7 +162,13 @@ More patterns and examples:\
 ## Testing
 
 ```bash
-bun test
+bun run test
+```
+
+or:
+
+```bash
+npm run test
 ```
 
 The test suite covers:
@@ -173,7 +191,7 @@ Designed for minimal overhead:
 
 ## TypeScript
 
-Fully compatible with strict mode:
+Fully compatible with TypeScript's strict mode:
 
 ```ts
 if (isString(value)) {
@@ -188,14 +206,14 @@ function isStringOrBoolean(x: unknown): x is string | boolean {
   return isString(x) || isBoolean(x);
 }
 
-isArrayOf(['a', true], isStringOrBoolean);
+isArrayOf(['a', true], isStringOrBoolean); // true
 ```
 
 ---
 
 ## Runtime Support
 
-- Node.js 14+
+- Node.js 14+ (with support both CommonJS and ESM)
 - Modern browsers (ES2015+)
 - Bun
 - Deno
@@ -204,7 +222,9 @@ isArrayOf(['a', true], isStringOrBoolean);
 
 ## Contributing
 
-Contributions are welcome. Prefer small, focused changes with clear reasoning.
+Contributions are welcome and appreciated. Please prefer small, focused changes with clear context and reasoning whenever possible.
+
+Before opening a pull request, read the [CONTRIBUTING.md](./CONTRIBUTING.md) guide for setup instructions, development workflow, and contribution guidelines.
 
 ---
 
