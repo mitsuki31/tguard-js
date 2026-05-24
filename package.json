@@ -1,6 +1,6 @@
 {
   "name": "tguard-js",
-  "description": "Runtime type safety for JavaScript.",
+  "description": "Predictable runtime type guards and structural narrowing where TypeScript compile-time inferences cannot reach.",
   "version": "1.1.0-dev0",
   "type": "commonjs",
   "files": [
@@ -36,14 +36,25 @@
     "type": "git",
     "url": "git+https://github.com/mitsuki31/tguard-js.git"
   },
+  "funding": "https://github.com/mitsuki31/tguard-js?sponsor=1",
   "engines": {
     "node": ">=14.13"
   },
   "homepage": "https://github.com/mitsuki31/tguard-js#readme",
   "keywords": [
-    "javascript",
+    "typescript",
     "typeguard",
-    "runtime",
-    "library"
+    "type-guard",
+    "runtime-validation",
+    "data-validation",
+    "schema-validation",
+    "runtime-type-checking",
+    "type-safety",
+    "zero-dependency",
+    "cross-realm",
+    "validator",
+    "assertion",
+    "node",
+    "browser"
   ]
 }
