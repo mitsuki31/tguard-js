@@ -1,5 +1,26 @@
 # tguard-js
 
+<div align="center">
+  <img alt="GitHub Actions Test" src="https://img.shields.io/github/actions/workflow/status/mitsuki31/tguard-js/test.yml?branch=master&style=flat-square&logo=github" />
+  <a href="https://app.codecov.io/gh/mitsuki31/tguard-js">
+    <img alt="Codecov Coverage" src="https://img.shields.io/codecov/c/github/mitsuki31/tguard-js?style=flat-square&logo=codecov&label=Code%20Coverage&labelColor=%23ffeedd" />
+  </a>
+  <br />
+
+  <a href="https://npmjs.com/package/tguard-js">
+    <img alt="npm version" src="https://img.shields.io/npm/v/tguard-js?style=flat-square&logo=npm" />
+  </a>
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+  <a href="https://github.com/mitsuki31/tguard-js/blob/master/LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/mitsuki31/tguard-js?style=flat-square&label=License" />
+  </a>
+  <br />
+
+  <img alt="Node Version" src="https://img.shields.io/node/v/tguard-js?style=flat-square&logo=node.js" />
+  <img alt="Bun Support" src="https://img.shields.io/badge/Bun-supported-f9f1e1?style=flat-square&logo=bun" />
+</div>
+<br />
+
 A small, focused runtime type-checking library for TypeScript and JavaScript.
 Provides reliable type guards with accurate narrowing, predictable behavior, and consistent handling of edge cases.
 
