@@ -21,30 +21,22 @@
 </div>
 <br />
 
-A small, focused runtime type-checking library for TypeScript and JavaScript.
-Provides reliable type guards with accurate narrowing, predictable behavior, and consistent handling of edge cases.
+A lightweight, runtime-agnostic validation library designed to secure the boundaries of your application. It delivers strict runtime type narrowing, absolute cross-realm safety, and predictable edge-case handling where TypeScript compile-time inferences cannot reach.
 
-This package helps you skip the repetitive work of writing runtime type checks.
-It gives you a consistent set of utilities, so you can focus on building instead of rewriting the same guards.
+Unlike heavy validation libraries, this package eliminates the boilerplate of writing repetitive runtime type checks.
+It provides a consistent, high-performance utility set so you can focus on building your application instead of rewriting the same guards.
 
 ---
 
-## Features
+## Key Benefits & Use Cases
 
-- **Reliable Type Guards**\
-  Covers primitives, objects, arrays, functions, dates, errors, and more.
-- **Accurate Type Narrowing**\
-  Uses proper TypeScript predicates (`x is T`) where runtime guarantees are valid.
-- **Cross-Realm Safe Checks**\
-  Handles cases where `instanceof` fails (e.g., `iframe`s, multiple runtimes).
-- **Consistent Runtime Semantics**\
-  Avoids misleading native behaviors (e.g., `Object.isSealed(null)`).
-- **Zero Dependencies**\
-  No external packages, suitable for production and libraries.
-- **Well-Defined Behavior**\
-  Each function documents its guarantees and limitations explicitly.
-- **Runtime Agnostic**\
-  Works in Node.js, browsers, Bun, and other modern JS environments.
+| Core Benefit | Why It Matters | Perfect Use Cases |
+| :--- | :--- | :--- |
+| **Zero External Dependencies** | Keeps your final bundle size minimal and completely eliminates supply-chain security risks. | **CLI Tools & SDKs:** Maintainers looking to build lean, ultra-fast utilities with no downstream bloat. |
+| **Runtime Agnostic** | Seamlessly works across **Node.js (v14.13+)**, modern browsers, **Bun**, and other contemporary JS environments. | **Isomorphic Applications:** Monorepos sharing validation logic between backends and frontends. |
+| **Predictable Structural Shapes** | Uses `hasShape` to explicitly validate object structures and nested properties with well-defined behavior. | **Web Scrapers & Config Parsers:** Safely asserting the exact keys and types of messy, extracted data or incoming user configurations. |
+| **Cross-Realm Safe** | Accurately checks types across isolated execution contexts where native features like `instanceof` shatter. | **Micro-frontends & Workers:** Environments passing dynamic payloads across Iframes or Web Worker boundaries. |
+| **TypeScript Inference** | Uses precise `value is T` type predicates to unlock instant IDE autocomplete and compile-time type narrowing. | **REST APIs & Route Guards:** Transforming untyped, incoming `unknown` JSON bodies into strictly typed objects. |
 
 ---
 
@@ -108,7 +100,25 @@ npm install tguard-js
 
 ## Quick Start
 
-```ts
+### Imports
+
+`tguard-js` supports both **ESModule** and **CommonJS** modules.
+
+#### ESModule
+
+```typescript
+import TG from 'tguard-js';
+```
+
+#### CommonJS
+
+```typescript
+const TG = require('tguard-js');
+```
+
+### Basic Example
+
+```typescript
 import { isString, isArrayOf, isRecord } from 'tguard-js';
 
 // Basic validation
@@ -121,7 +131,7 @@ if (isArrayOf(data, isString)) {
   console.log(data[0]);
 }
 
-// Check if the config has `key` before consuming it
+// Check if the config has `key` property before consuming it
 if (isRecord(config) && isString(config.key)) {
   useConfig(config);
 }
