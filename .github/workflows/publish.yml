@@ -12,7 +12,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -28,7 +29,9 @@ jobs:
         with:
           node-version: 22
           registry-url: "https://registry.npmjs.org"
-          package-manager-cache: false
+
+      - name: Update npm (for trusted publishing >=11.5.1)
+        run: npm install --global npm@latest
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -44,8 +47,5 @@ jobs:
 
       - name: Publish to npm registry
         run: |
-          npm config set //registry.npmjs.org/:_authToken "${NPM_TOKEN}"
           npm pkg delete devDependencies
-          npm publish --access public
-        env:
-          NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          npm publish --access public --provenance
