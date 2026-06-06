@@ -253,8 +253,7 @@ export function isSafeInteger(x: unknown): x is number {
  * This function returns `true` only for finite numeric values that
  * contain a fractional component.
  *
- * ### Implementation Notes
- *
+ * @implNote
  * JavaScript does not distinguish integer and floating-point types at
  * runtime. This function treats any number without a fractional part as
  * an integer, even if written with decimal notation (e.g. `1.0`).

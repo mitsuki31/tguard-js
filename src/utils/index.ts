@@ -70,8 +70,7 @@ export function hasOwn<K extends PropertyKey>(
  * hasKeys([], ['length'], true);  // true
  * ```
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - This function checks only own properties.
  * - Prototype chain properties are ignored.
  * - This function does not validate property values. Use
@@ -196,8 +195,7 @@ export function hasKeys<K extends PropertyKey>(
  * }); // true
  * ```
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - Only own properties are checked.
  * - Prototype properties are ignored.
  * - Additional properties are allowed.
@@ -333,8 +331,7 @@ export function hasShape<S extends Record<PropertyKey, unknown>>(
  * | `class {}`                    | `'function'`        | `'(anonymous)'`    |
  * | `function() {}`               | `'function'`        | `'(anonymous)'`    |
  *
- * ### Notes
- *
+ * @note
  * - Function and class names may be inferred from variable bindings:
  *
  *   ```typescript

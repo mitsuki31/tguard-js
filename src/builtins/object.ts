@@ -225,8 +225,7 @@ export function isRecordOf<K extends PropertyKey, V>(
  * | `{}`                   | `true`  |
  * | `{ [Symbol('a')]: 1 }` | `false` |
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - This function only checks own properties.
  * - Prototype properties are ignored.
  * - Arrays are not considered plain objects.

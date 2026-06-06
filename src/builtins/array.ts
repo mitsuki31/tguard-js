@@ -97,8 +97,7 @@ export function isArrayOf<T>(x: unknown, predicate: Predicate<T>): x is T[] {
  * Unlike {@linkcode isArrayOf}, tuple validation is positional and supports
  * heterogeneous element types.
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - Tuple validation is strict and positional.
  * - Extra or missing elements will cause validation to fail.
  * - Predicates are evaluated in order.
@@ -428,8 +427,7 @@ export function isPlainObjectArray(
  * - object values are compared by reference identity
  * - `NaN` is considered equal to `NaN`
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - This function does not perform deep equality comparison.
  * - Arrays containing structurally equal but different object references
  *   are considered unique.
@@ -590,8 +588,7 @@ export function isReadonlyArray(x: unknown): x is readonly unknown[] {
  * | `{}`                | `false` |
  * | `null`              | `false` |
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - Empty two-dimensional array are considered valid.
  * - Inner arrays may contain values of any type.
  * - This function checks only array nesting depth, not contents.
