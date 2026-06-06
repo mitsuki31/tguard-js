@@ -1,6 +1,10 @@
 # tguard-js
 
 <div align="center">
+  <img src="https://raw.githubusercontent.com/mitsuki31/tguard-js/refs/heads/master/docs/favicon.png" />
+</div>
+
+<div align="center">
   <img alt="GitHub Actions Test" src="https://img.shields.io/github/actions/workflow/status/mitsuki31/tguard-js/test.yml?branch=master&style=flat-square&logo=github" />
   <a href="https://app.codecov.io/gh/mitsuki31/tguard-js">
     <img alt="Codecov Coverage" src="https://img.shields.io/codecov/c/github/mitsuki31/tguard-js?style=flat-square&logo=codecov&label=Code%20Coverage&labelColor=%23ffeedd" />
@@ -9,6 +13,9 @@
 
   <a href="https://npmjs.com/package/tguard-js">
     <img alt="npm version" src="https://img.shields.io/npm/v/tguard-js?style=flat-square&logo=npm" />
+  </a>
+  <a href="https://bundlephobia.com/package/tguard-js">
+    <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/tguard-js?style=flat-square&logo=npm" />
   </a>
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat-square&logo=typescript&logoColor=white" />
   <a href="https://github.com/mitsuki31/tguard-js/blob/master/LICENSE">
@@ -38,9 +45,7 @@ It provides a consistent, high-performance utility set so you can focus on build
 | **Cross-Realm Safe** | Accurately checks types across isolated execution contexts where native features like `instanceof` shatter. | **Micro-frontends & Workers:** Environments passing dynamic payloads across Iframes or Web Worker boundaries. |
 | **TypeScript Inference** | Uses precise `value is T` type predicates to unlock instant IDE autocomplete and compile-time type narrowing. | **REST APIs & Route Guards:** Transforming untyped, incoming `unknown` JSON bodies into strictly typed objects. |
 
----
-
-## Why `tguard-js`?
+## Why tguard-js?
 
 JavaScript’s built-in type checks are inconsistent and sometimes misleading.
 
@@ -50,53 +55,49 @@ const ForeignError = window.frames[0].Error;
 new ForeignError() instanceof Error; // false
 
 // Primitive coercion (by spec, but often undesirable)
-Object.isSealed(null);   // true
-Object.isFrozen(123);    // true
+Object.isSealed(null);     // true
+Object.isFrozen(123);      // true
+typeof null === 'object';  // true
 ```
 
 These results are technically correct by specification, but not useful for runtime validation.
 
----
-
-### `tguard-js` Approach
+### tguard-js Approach
 
 ```js
-import * as TG from 'tguard-js';
+import tg from 'tguard-js';
 
-TG.isNull(null);    // true
-TG.isArray([]);     // true
-TG.isObject(null);  // false
-TG.isRecord({});    // true
-TG.isRecord([]);    // false
+tg.isNull(null);    // true
+tg.isArray([]);     // true
+tg.isObject(null);  // false
+tg.isRecord({});    // true
+tg.isRecord([]);    // false
 
 // Cross-realm safe
 const ForeignError = window.frames[0].Error;
-TG.isError(new ForeignError()); // true
+tg.isError(new ForeignError()); // true
 
 // Predictable object checks
-TG.isSealed(null);  // false
-TG.isFrozen(123);   // false
+tg.isSealed(null);  // false
+tg.isFrozen(123);   // false
+tg.utils.getType(null, true) === 'object'; // false
 ```
 
 The library prioritizes **predictability over spec quirks**.
-
----
 
 ## Installation
 
 ### Bun
 
 ```bash
-bun install tguard-js
+bun a tguard-js
 ```
 
 ### npm
 
 ```bash
-npm install tguard-js
+npm i tguard-js
 ```
-
----
 
 ## Quick Start
 
@@ -107,13 +108,13 @@ npm install tguard-js
 #### ESModule
 
 ```typescript
-import TG from 'tguard-js';
+import tg from 'tguard-js';
 ```
 
 #### CommonJS
 
 ```typescript
-const TG = require('tguard-js');
+const tg = require('tguard-js');
 ```
 
 ### Basic Example
@@ -137,58 +138,36 @@ if (isRecord(config) && isString(config.key)) {
 }
 ```
 
----
+Object validation:
 
-## Core Concepts
+```js
+import tg from 'tguard-js';
 
-### 1. Type guards only when provable
+const isUser = (u) => tg.hasShape(u, {
+  id: tg.isNumber,
+  name: tg.isString,
+});
 
-Functions use `x is T` **only when runtime checks guarantee it**.
+const data = { ... } // untrusted user data
 
-```ts
-isString(x): x is string    // safe
-isArray(x): x is unknown[]  // safe
-isRecord(o): o is Record<PropertyKey, unknown>  // safe
+// Check if the input is unrecognized as user data
+if (!isUser(data)) {
+  // Here you can throw an error or have a fallback
+}
 
-isEmptyArray(x): x is []
-isEmptyObject(o): o is Record<PropertyKey, never>
+// Can safely use the input data
+consumeUser(data);
 ```
-
-### 2. No false guarantees
-
-Generic predicates are only used when validated:
-
-```ts
-isArrayOf<T>(x, predicate): x is T[]
-isRecordOf<T>(x, predicate): x is Record<string, T>
-```
-
-This avoids unsafe narrowing.
-
-### 3. Clear separation of responsibilities
-
-| Function Type   | Example         |
-| --------------- | --------------- |
-| Type check      | `isDate`        |
-| Validity check  | `isValidDate`   |
-| Structure check | `isPlainObject` |
-| Semantic check  | `isEmptyObject` |
-
----
 
 ## API Overview
 
 See APIs documentation:\
 → [API Overview](./docs/APIs.md)
 
----
-
 ## Advanced Usage
 
 More patterns and examples:\
 → [Advanced Usage](./docs/Advanced-Usage.md)
-
----
 
 ## Testing
 
@@ -207,47 +186,6 @@ The test suite covers:
 - edge cases
 - invalid inputs
 - runtime consistency
-
----
-
-## Performance
-
-Designed for minimal overhead:
-
-- No allocations beyond necessary checks
-- Direct use of native APIs
-- Suitable for hot paths and validation layers
-
----
-
-## TypeScript
-
-Fully compatible with TypeScript's strict mode:
-
-```ts
-if (isString(value)) {
-  value.charAt(0);
-}
-```
-
-Custom predicates:
-
-```ts
-function isStringOrBoolean(x: unknown): x is string | boolean {
-  return isString(x) || isBoolean(x);
-}
-
-isArrayOf(['a', true], isStringOrBoolean); // true
-```
-
----
-
-## Runtime Support
-
-- Node.js 14+ (with support both CommonJS and ESM)
-- Modern browsers (ES2015+)
-- Bun
-- Deno
 
 ---
 
