@@ -1,6 +1,6 @@
 {
   "name": "tguard-js",
-  "description": "Predictable runtime type guards and structural narrowing where TypeScript compile-time inferences cannot reach.",
+  "description": "Lightweight and predictable runtime type guards for JavaScript and TypeScript",
   "version": "1.1.0-dev0",
   "type": "commonjs",
   "files": [
