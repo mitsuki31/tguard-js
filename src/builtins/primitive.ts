@@ -10,7 +10,7 @@
 /**
  * Type alias for primitive types.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export type PrimitiveType =
   | string
@@ -44,7 +44,7 @@ export type PrimitiveType =
  * @param x - The value to check.
  * @returns `true` if the value is a primitive type, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isPrimitive(x: unknown): x is PrimitiveType {
   return x === null || (typeof x !== 'object' && typeof x !== 'function');
@@ -58,7 +58,7 @@ export function isPrimitive(x: unknown): x is PrimitiveType {
  * @param x - The value to be checked.
  * @returns `true` if the value is a string, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isString(x: unknown): x is string {
   return typeof x === 'string';
@@ -98,7 +98,7 @@ export function isString(x: unknown): x is string {
  * @param x - The value to validate.
  * @returns `true` if the value is a string containing only ASCII characters.
  *
- * @since 1.1.0
+ * @since 1.1
  * @see   {@link isPrintableASCIIString}
  */
 export function isASCIIString(x: unknown): x is string {
@@ -140,7 +140,7 @@ export function isASCIIString(x: unknown): x is string {
  * @param x - The value to validate.
  * @returns `true` if the value is a string containing only printable ASCII characters.
  *
- * @since 1.1.0
+ * @since 1.1
  * @see   {@link isASCIIString}
  */
 export function isPrintableASCIIString(x: unknown): x is string {
@@ -172,7 +172,7 @@ export function isPrintableASCIIString(x: unknown): x is string {
  * @param x - The value to be checked.
  * @returns `true` if the value is a number, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isBigInt}
  * @see   {@link isFinite}
  */
@@ -206,7 +206,7 @@ export function isNumber(x: unknown): x is number {
  * @param x - The value to validate.
  * @returns `true` if the value is a finite integer.
  *
- * @since 1.1.0
+ * @since 1.1
  * @see   {@link isSafeInteger}
  * @see   {@link isFloat}
  */
@@ -239,7 +239,7 @@ export function isInteger(x: unknown): x is number {
  * @param x - The value to validate.
  * @returns `true` if the value is a safe integer.
  *
- * @since 1.1.0
+ * @since 1.1
  * @see   {@link isInteger}
  */
 export function isSafeInteger(x: unknown): x is number {
@@ -271,7 +271,7 @@ export function isSafeInteger(x: unknown): x is number {
  * @param x - The value to validate.
  * @returns `true` if the value is a finite non-integer number.
  *
- * @since 1.1.0
+ * @since 1.1
  * @see   {@link isInteger}
  */
 export function isFloat(x: unknown): x is number {
@@ -297,7 +297,7 @@ export function isFloat(x: unknown): x is number {
  * @param x - The value to be checked.
  * @returns `true` if the value is a finite number, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isNumber}
  */
 export function isFinite(x: unknown): x is number {
@@ -323,7 +323,7 @@ export function isFinite(x: unknown): x is number {
  * @param x - The value to be checked.
  * @returns `true` if the value is an infinite number, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isFinite}
  */
 export function isInfinite(x: unknown): x is number {
@@ -337,7 +337,7 @@ export function isInfinite(x: unknown): x is number {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `bigint`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isNumber}
  */
 export function isBigInt(x: unknown): x is bigint {
@@ -350,7 +350,7 @@ export function isBigInt(x: unknown): x is bigint {
  * @param x - The value to be checked.
  * @returns `true` if the value is `NaN`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isNaN(x: unknown): x is number {
   return isNumber(x) && Number.isNaN(x);
@@ -365,7 +365,7 @@ export function isNaN(x: unknown): x is number {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `boolean`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isBoolean(x: unknown): x is boolean {
   return typeof x === 'boolean';
@@ -377,7 +377,7 @@ export function isBoolean(x: unknown): x is boolean {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `boolean`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isBoolean}
  */
 export function isBool(x: unknown): x is boolean {
@@ -393,7 +393,7 @@ export function isBool(x: unknown): x is boolean {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `symbol`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isSymbol(x: unknown): x is symbol {
   return typeof x === 'symbol';
@@ -443,7 +443,7 @@ export function isNullOrUndefined(x: unknown): x is null | undefined {
  *
  * @returns `true` if the value is `null` or `undefined`, `false` otherwise.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isNullOrUndefined}
  */
 export function isNullish(x: unknown): x is null | undefined {
@@ -467,7 +467,7 @@ export function isNullish(x: unknown): x is null | undefined {
  * }
  * ```
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isNullOrUndefined}
  */
 export function isNonNullish<T>(x: T): x is NonNullable<T> {
@@ -482,7 +482,7 @@ export function isNonNullish<T>(x: T): x is NonNullable<T> {
  * @param x - The value to check.
  * @returns `true` if the value is `null`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isNull(x: unknown): x is null {
   return x === null;
@@ -498,7 +498,7 @@ export function isNull(x: unknown): x is null {
  * @param x - The value to check.
  * @returns `true` if the value is `undefined`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isDefined} - Use this function to check if a value is "defined".
  */
 export function isUndefined(x: unknown): x is undefined {
@@ -512,9 +512,8 @@ export function isUndefined(x: unknown): x is undefined {
  * This is a type guard that narrows the type away from `null` and `undefined`.
  *
  * @remarks
- * This function is different from {@linkcode envs.env.isEnvDefined | isEnvDefined}.
- * {@linkcode envs.env.isEnvDefined | isEnvDefined} checks if an environment variable is
- * defined and has a non-empty string value.
+ * This function is different from {@linkcode envs/env.isEnvDefined | isEnvDefined}.
+ * `isEnvDefined` checks if an environment variable is defined and has a non-empty string value.
  *
  * @typeParam T - The type of the input value.
  * @param     x - The value to check.
@@ -529,7 +528,7 @@ export function isUndefined(x: unknown): x is undefined {
  * }
  * ```
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isDefined<T>(x: T): x is NonNullable<T> {
   return isNonNullish(x);

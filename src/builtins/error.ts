@@ -32,7 +32,7 @@ import { isString } from './primitive';
  * @param x - The value to be checked.
  * @returns `true` if the value is an `Error` object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isError(x: unknown): x is Error {
   return x instanceof Error || toString.call(x) === '[object Error]';
@@ -58,7 +58,7 @@ export function isError(x: unknown): x is Error {
  * @param x - The value to be checked.
  * @returns `true` if the value is error-like, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isErrorLike(x: unknown): x is { message: string } {
   return isObject(x) && 'message' in x && isString((x as any).message);
@@ -72,7 +72,7 @@ export function isErrorLike(x: unknown): x is { message: string } {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `TypeError`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isTypeError(x: unknown): x is TypeError {
   return x instanceof TypeError;
@@ -84,7 +84,7 @@ export function isTypeError(x: unknown): x is TypeError {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `RangeError`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isRangeError(x: unknown): x is RangeError {
   return x instanceof RangeError;
@@ -96,7 +96,7 @@ export function isRangeError(x: unknown): x is RangeError {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `ReferenceError`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isReferenceError(x: unknown): x is ReferenceError {
   return x instanceof ReferenceError;
@@ -108,7 +108,7 @@ export function isReferenceError(x: unknown): x is ReferenceError {
  * @param x - The value to be checked.
  * @returns `true` if the value is a `SyntaxError`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isSyntaxError(x: unknown): x is SyntaxError {
   return x instanceof SyntaxError;
@@ -133,7 +133,7 @@ export function isSyntaxError(x: unknown): x is SyntaxError {
  * @param x - The value to be checked.
  * @returns `true` if the value contains a string `message`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function hasErrorMessage(x: unknown): x is { message: string } {
   return isErrorLike(x);
@@ -178,7 +178,7 @@ export function hasErrorMessage(x: unknown): x is { message: string } {
  * }
  * ```
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isError}
  * @see   {@link isErrorLike}
  */
@@ -223,7 +223,7 @@ export function normalizeError(x: unknown): Error {
  * }
  * ```
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link normalizeError}
  */
 export function ensureError(x: unknown): Error {

@@ -15,7 +15,7 @@ import { toStringFunc } from '../internal/utils';
  * @param x - The value to be checked.
  * @returns `true` if the value is a function, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isCallable}
  */
 export function isFunction(x: unknown): x is (...args: any[]) => unknown {
@@ -49,7 +49,7 @@ export function isFunction(x: unknown): x is (...args: any[]) => unknown {
  * @param x - The value to be checked.
  * @returns `true` if the value is an ES6 class constructor, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isCallable}
  */
 export function isClass(x: unknown): x is new (...args: any[]) => unknown {
@@ -75,7 +75,7 @@ export function isClass(x: unknown): x is new (...args: any[]) => unknown {
  * @param x - The value to be checked.
  * @returns `true` if the value is callable, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isFunction}
  * @see   {@link isClass}
  */

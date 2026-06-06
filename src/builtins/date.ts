@@ -29,7 +29,7 @@ import { isNaN, isString } from './primitive';
  * @param x - The value to be checked.
  * @returns `true` if the value is a `Date` object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isValidDate}
  */
 export function isDate(x: unknown): x is Date {
@@ -53,7 +53,7 @@ export function isDate(x: unknown): x is Date {
  * @param x - The value to be checked.
  * @returns `true` if the value is a valid `Date`, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isDate}
  */
 export function isValidDate(x: unknown): x is Date {
@@ -85,7 +85,7 @@ export function isValidDate(x: unknown): x is Date {
  * @param x - The value to be checked.
  * @returns `true` if the value is a valid ISO date string, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isISODateString(x: unknown, strict?: boolean): x is string {
   if (!isString(x)) return false;
@@ -125,7 +125,7 @@ export function isISODateString(x: unknown, strict?: boolean): x is string {
  * @param x - The value to be checked.
  * @returns `true` if the value is a parseable date string, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isISODateString}
  */
 export function isDateString(x: unknown): x is string {
