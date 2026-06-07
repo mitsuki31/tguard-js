@@ -1,0 +1,70 @@
+name: Deploy API Docs
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-docs
+  cancel-in-progress: false
+
+jobs:
+  deploy_docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.12
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.bun
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-bun-
+
+      - name: Get package version
+        id: get-pkg
+        run: echo "pkg_version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate version for manual dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          VERSION="${{ steps.get-pkg.outputs.pkg_version }}"
+          if [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+- ]]; then
+            echo "Error: Manual dispatch is not allowed for pre-release versions ($VERSION)" >&2
+            exit 1
+          fi
+          echo "Version $VERSION is valid"
+
+      - run: bun install --frozen-lockfile
+      - run: bun run docs
+
+      - name: Deploy API docs
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: './docs/api/*'
+          enable_jekyll: true
+          full_commit_message: 'docs: Deploy v${{ env.VERSION }} API docs'
+        env:
+          VERSION: ${{ steps.get-pkg.outputs.pkg_version }}
