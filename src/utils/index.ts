@@ -24,7 +24,7 @@
  * hasOwn(obj, 'b');  // false
  * ```
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function hasOwn<K extends PropertyKey>(
   obj: unknown,
@@ -70,12 +70,11 @@ export function hasOwn<K extends PropertyKey>(
  * hasKeys([], ['length'], true);  // true
  * ```
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - This function checks only own properties.
  * - Prototype chain properties are ignored.
  * - This function does not validate property values. Use
- *   {@linkcode builtins.object.isRecordOf | isRecordOf} for value validation.
+ *   {@linkcode builtins/object.isRecordOf | isRecordOf} for value validation.
  *
  * @example
  * Basic key validation:
@@ -130,7 +129,7 @@ export function hasOwn<K extends PropertyKey>(
  *
  * @returns `true` if all specified keys exist on the object.
  *
- * @since 1.1.0
+ * @since 1.1
  */
 export function hasKeys<K extends PropertyKey>(
   o: unknown,
@@ -166,7 +165,7 @@ export function hasKeys<K extends PropertyKey>(
  * Unlike {@linkcode hasKeys}, this function also validates the values of
  * each property.
  *
- * Unlike {@link builtins.object.isRecordOf | isRecordOf},
+ * Unlike {@linkcode builtins/object.isRecordOf | isRecordOf},
  * each property may use a different validator.
  *
  * ### Shape Key Behavior
@@ -196,8 +195,7 @@ export function hasKeys<K extends PropertyKey>(
  * }); // true
  * ```
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - Only own properties are checked.
  * - Prototype properties are ignored.
  * - Additional properties are allowed.
@@ -262,10 +260,10 @@ export function hasKeys<K extends PropertyKey>(
  *
  * @returns `true` if the value matches the specified shape.
  *
- * @since 1.1.0
+ * @since 1.1
  *
  * @see {@link hasKeys}
- * @see {@link builtins.object.isRecordOf}
+ * @see {@link builtins/object.isRecordOf | isRecordOf}
  */
 export function hasShape<S extends Record<PropertyKey, unknown>>(
   o: unknown,
@@ -333,8 +331,7 @@ export function hasShape<S extends Record<PropertyKey, unknown>>(
  * | `class {}`                    | `'function'`        | `'(anonymous)'`    |
  * | `function() {}`               | `'function'`        | `'(anonymous)'`    |
  *
- * ### Notes
- *
+ * @note
  * - Function and class names may be inferred from variable bindings:
  *
  *   ```typescript
@@ -352,7 +349,7 @@ export function hasShape<S extends Record<PropertyKey, unknown>>(
  *
  * @returns A string representing the type of the value.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function getType(x: unknown, nameOnly?: boolean): string {
   // We don't use `typeof x` here, it can returns 'object' which is
@@ -392,7 +389,7 @@ export function getType(x: unknown, nameOnly?: boolean): string {
  * @param x - The value whose type is to be determined.
  * @returns A string representing the detailed type of the value.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see {@link getType}
  */
 export function typeOf(x: unknown): string {

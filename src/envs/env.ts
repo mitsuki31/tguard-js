@@ -42,8 +42,9 @@
  * }
  * ```
  *
- * @since 1.0.0
- * @see   {@link isNonNullish} - Use this function to check if a value is "non-nullish".
+ * @since 1.0
+ * @see   {@link builtins/primitive.isNonNullish | isNonNullish}
+ *        - Use this function to check if a value is "non-nullish".
  */
 export function isEnvDefined(envVar: string | undefined): envVar is string {
   return typeof envVar === 'string' && envVar !== '';

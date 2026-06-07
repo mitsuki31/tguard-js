@@ -49,3 +49,11 @@ jobs:
         run: |
           npm pkg delete devDependencies
           npm publish --access public --provenance
+
+      - name: Post npm publish
+        run: |
+          git checkout -- package.json
+          echo "node version: $(node --version)"
+          echo "npm version: $(npm --version)"
+          echo "bun version: $(bun --revision)"
+          echo "tguard-js v$(jq -r .version package.json) published to npm"

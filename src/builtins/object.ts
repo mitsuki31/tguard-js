@@ -38,7 +38,7 @@ type Predicate<K, V> = (key: K, value: unknown) => value is V;
  * @param o - The value to be checked.
  * @returns `true` if the value is an object and not `null`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isPlainObject}
  */
 export function isObject(o: unknown): o is object {
@@ -77,7 +77,7 @@ export function isObject(o: unknown): o is object {
  *
  * @returns `true` if the value is a plain object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isObject}
  */
 export function isPlainObject(o: unknown): o is Record<PropertyKey, unknown> {
@@ -95,7 +95,7 @@ export function isPlainObject(o: unknown): o is Record<PropertyKey, unknown> {
  * @param o - The value to be checked.
  * @returns `true` if the value is a plain object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isPlainObject}
  */
 export function isRecord(o: unknown): o is Record<PropertyKey, unknown> {
@@ -171,7 +171,7 @@ export function isRecord(o: unknown): o is Record<PropertyKey, unknown> {
  *
  * @returns `true` if all entries satisfy the predicate, otherwise `false`.
  *
- * @since 1.1.0
+ * @since 1.1
  * @see   {@link isRecord}
  */
 export function isRecordOf<K extends PropertyKey, V>(
@@ -203,7 +203,7 @@ export function isRecordOf<K extends PropertyKey, V>(
  * including non-enumerable and symbol properties.
  *
  * For checking an empty array, consider using
- * {@linkcode builtins.array.isEmptyArray | isEmptyArray}.
+ * {@linkcode builtins/array.isEmptyArray | isEmptyArray}.
  *
  * ### Examples
  *
@@ -225,8 +225,7 @@ export function isRecordOf<K extends PropertyKey, V>(
  * | `{}`                   | `true`  |
  * | `{ [Symbol('a')]: 1 }` | `false` |
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - This function only checks own properties.
  * - Prototype properties are ignored.
  * - Arrays are not considered plain objects.
@@ -236,7 +235,7 @@ export function isRecordOf<K extends PropertyKey, V>(
  *
  * @returns `true` if the value is an empty plain object, `false` otherwise.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see {@link isPlainObject}
  */
 export function isEmptyObject(
@@ -290,7 +289,7 @@ export function isEmptyObject(
  *
  * @returns `true` if the value is a sealed object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isSealed<T extends object>(o: T): o is T {
   if (!isObject(o)) return false;
@@ -322,7 +321,7 @@ export function isSealed<T extends object>(o: T): o is T {
  *
  * @returns `true` if the value is an extensible object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isExtensible<T extends object>(o: unknown): o is T {
   if (!isObject(o)) return false;
@@ -365,7 +364,7 @@ export function isExtensible<T extends object>(o: unknown): o is T {
  *
  * @returns `true` if the value is a frozen object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isFrozen<T extends object>(o: unknown): o is Readonly<T> {
   if (!isObject(o)) return false;

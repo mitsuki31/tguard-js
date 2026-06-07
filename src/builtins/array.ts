@@ -35,7 +35,7 @@ type Predicate<T> = (value: unknown) => value is T;
  * @param x - The value to be checked.
  * @returns `true` if the value is an array, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  */
 export function isArray(x: unknown): x is unknown[] {
@@ -76,7 +76,7 @@ export function isArray(x: unknown): x is unknown[] {
  * @returns `true` if the value is an array and all elements satisfy
  *          the predicate, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArray}
  */
 export function isArrayOf<T>(x: unknown, predicate: Predicate<T>): x is T[] {
@@ -97,8 +97,7 @@ export function isArrayOf<T>(x: unknown, predicate: Predicate<T>): x is T[] {
  * Unlike {@linkcode isArrayOf}, tuple validation is positional and supports
  * heterogeneous element types.
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - Tuple validation is strict and positional.
  * - Extra or missing elements will cause validation to fail.
  * - Predicates are evaluated in order.
@@ -150,17 +149,27 @@ export function isArrayOf<T>(x: unknown, predicate: Predicate<T>): x is T[] {
  * @typeParam T - The tuple type inferred from the predicate list.
  *
  * @param x - The value to validate.
- * @param predicates - Predicates used to validate each tuple position.
+ * @param predicate - A predicate used to validate the tuple elements.
  *
  * @returns `true` if the value satisfies the tuple structure, otherwise `false`.
  *
- * @since 1.1.0
+ * @since 1.1
  */
 export function isTuple<T>(
   x: unknown,
   predicate: Predicate<T>
 ): x is readonly [T, ...T[]];
 
+/**
+ * {@inheritDoc}
+ *
+ * @typeParam T - The tuple type inferred from the predicate list.
+ *
+ * @param x - The value to validate.
+ * @param predicates - Predicates used to validate each tuple position.
+ *
+ * @since   1.1
+ */
 export function isTuple<T extends readonly unknown[]>(
   x: unknown,
   predicates: readonly [...{ [K in keyof T]: Predicate<T[K]> }]
@@ -207,7 +216,7 @@ export function isTuple(
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of strings, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isString}
  */
@@ -232,7 +241,7 @@ export function isStringArray(x: unknown): x is string[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of numbers, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isNumber}
  */
@@ -257,7 +266,7 @@ export function isNumberArray(x: unknown): x is number[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of booleans, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isBoolean}
  */
@@ -282,7 +291,7 @@ export function isBooleanArray(x: unknown): x is boolean[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of `bigint`s, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isBigInt}
  */
@@ -307,7 +316,7 @@ export function isBigIntArray(x: unknown): x is bigint[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of symbols, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isSymbol}
  */
@@ -332,7 +341,7 @@ export function isSymbolArray(x: unknown): x is symbol[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of functions, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isFunction}
  */
@@ -364,7 +373,7 @@ export function isFunctionArray(
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of objects, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArrayOf}
  * @see   {@link isObject}
  */
@@ -389,7 +398,7 @@ export function isObjectArray(x: unknown): x is object[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an array of plain objects, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  * @see   {@link isArray}
  * @see   {@link isPlainObject}
  */
@@ -418,8 +427,7 @@ export function isPlainObjectArray(
  * - object values are compared by reference identity
  * - `NaN` is considered equal to `NaN`
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - This function does not perform deep equality comparison.
  * - Arrays containing structurally equal but different object references
  *   are considered unique.
@@ -471,7 +479,7 @@ export function isPlainObjectArray(
  *
  * @returns `true` if the array contains no duplicate entries, otherwise `false`.
  *
- * @since 1.1.0
+ * @since 1.1
  */
 export function isUniqueArray(x: unknown): x is unknown[] {
   if (!isArray(x)) return false;
@@ -493,7 +501,7 @@ export function isUniqueArray(x: unknown): x is unknown[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is an empty array, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isEmptyArray(x: unknown): x is [] {
   return isArray(x) && x.length === 0;
@@ -533,7 +541,7 @@ export function isEmptyArray(x: unknown): x is [] {
  * @returns `true` if `x` is an array and the number of its own enumerable keys
  *          equals its `length`; otherwise `false`.
  *
- * @since 1.1.0
+ * @since 1.1
  */
 export function isDenseArray(x: unknown): x is unknown[] {
   return isArray(x) && Object.keys(x).length === x.length;
@@ -548,7 +556,7 @@ export function isDenseArray(x: unknown): x is unknown[] {
  * @param x - The value to be checked.
  * @returns `true` if the value is a readonly array, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isReadonlyArray(x: unknown): x is readonly unknown[] {
   return isArray(x) && Object.isFrozen(x);
@@ -580,8 +588,7 @@ export function isReadonlyArray(x: unknown): x is readonly unknown[] {
  * | `{}`                | `false` |
  * | `null`              | `false` |
  *
- * ### Implementation Notes
- *
+ * @implNote
  * - Empty two-dimensional array are considered valid.
  * - Inner arrays may contain values of any type.
  * - This function checks only array nesting depth, not contents.
@@ -589,7 +596,7 @@ export function isReadonlyArray(x: unknown): x is readonly unknown[] {
  * @param x - The value to validate.
  * @returns `true` if the value is a two-dimensional array.
  *
- * @since 1.1.0
+ * @since 1.1
  *
  * @see {@link isMatrix}
  */
@@ -637,7 +644,7 @@ export function is2DArray(x: unknown): x is unknown[][] {
  * @param x - The value to validate.
  * @returns `true` if the value is an array of number arrays.
  *
- * @since 1.1.0
+ * @since 1.1
  *
  * @see {@link is2DArray}
  */

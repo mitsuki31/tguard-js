@@ -15,7 +15,7 @@ import { isObject } from '../builtins/object';
  * @param   x - The value to check.
  * @returns `true` if the value is a `Promise`-like object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isPromiseLike(x: unknown): x is PromiseLike<unknown> {
   return isObject(x) && typeof (x as PromiseLike<unknown>).then === 'function';
@@ -27,7 +27,7 @@ export function isPromiseLike(x: unknown): x is PromiseLike<unknown> {
  * @param   x - The value to check.
  * @returns `true` if the value is a `Promise` object, otherwise `false`.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 export function isPromise(x: unknown): x is Promise<unknown> {
   return x instanceof Promise;
