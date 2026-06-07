@@ -9,6 +9,9 @@
   <a href="https://app.codecov.io/gh/mitsuki31/tguard-js">
     <img alt="Codecov Coverage" src="https://img.shields.io/codecov/c/github/mitsuki31/tguard-js?style=flat-square&logo=codecov&label=Code%20Coverage&labelColor=%23ffeedd" />
   </a>
+  <a href="https://www.codefactor.io/repository/github/mitsuki31/tguard-js">
+    <img alt="CodeFactor" src="https://www.codefactor.io/repository/github/mitsuki31/tguard-js/badge" />
+  </a>
   <br />
 
   <a href="https://npmjs.com/package/tguard-js">
