@@ -63,8 +63,9 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: './docs/api/*'
+          publish_dir: ./docs/api/
           enable_jekyll: true
+          force_orphan: true
           full_commit_message: 'docs: Deploy v${{ env.VERSION }} API docs'
         env:
           VERSION: ${{ steps.get-pkg.outputs.pkg_version }}
